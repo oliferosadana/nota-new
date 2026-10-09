@@ -15,5 +15,8 @@
     "@astrojs/node": "^8.3.4",
     "@supabase/supabase-js": "^2.45.6",
     "astro": "^4.16.18"
+  },
+  "devDependencies": {
+    "wrangler": "^4.149.0"
   }
 }
