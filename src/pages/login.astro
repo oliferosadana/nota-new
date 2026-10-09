@@ -1,0 +1,500 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+export const prerender = false;
+---
+
+<Layout title="Masuk ke Akun - ThermalPOS Pro (9Router UI)">
+  <div class="auth-page-container">
+    <!-- 9Router Background Ambient Glow -->
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <div class="ambient-glow-secondary" aria-hidden="true"></div>
+
+    <div class="auth-card-wrapper">
+      <!-- 9Router Pill Badge -->
+      <div class="badge-container">
+        <div class="pill-badge">
+          <span class="status-dot"></span>
+          <span>Ultra-low Latency ESC/POS Gateway</span>
+        </div>
+      </div>
+
+      <!-- Auth Main Card -->
+      <div class="auth-card">
+        <!-- Brand Header -->
+        <div class="auth-brand">
+          <div class="auth-icon" aria-hidden="true">🖨️</div>
+          <h1 class="auth-title">
+            ThermalPOS <span class="gradient-text">Pro</span>
+          </h1>
+          <p class="auth-subtitle">Sistem Kasir Modern & Gateway Printer Thermal ESC/POS</p>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="auth-tabs-router">
+          <button type="button" class="tab-btn active" id="tab-login">
+            <span>Masuk Kasir</span>
+          </button>
+          <button type="button" class="tab-btn" id="tab-register">
+            <span>Daftar Akun Baru</span>
+          </button>
+        </div>
+
+        <!-- Alert Notification -->
+        <div id="auth-alert" class="auth-alert" style="display: none;" role="alert"></div>
+
+        <!-- Form Login -->
+        <form id="login-form" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="login-email">Alamat Email</label>
+            <input type="email" id="login-email" placeholder="kasir@toko.com" required autocomplete="email" autofocus />
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Kata Sandi</label>
+            <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg auth-submit-btn" id="btn-submit-login">
+            <span>Masuk ke Dashboard POS</span>
+            <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+
+        <!-- Form Register -->
+        <form id="register-form" class="auth-form" style="display: none;" novalidate>
+          <div class="form-group">
+            <label for="reg-name">Nama Kasir / Petugas</label>
+            <input type="text" id="reg-name" placeholder="Contoh: Rina atau Kasir Pagi" required autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-store">Nama Toko / Usaha</label>
+            <input type="text" id="reg-store" placeholder="Contoh: UD BENTHENK KOMPUTER" value="UD BENTHENK KOMPUTER" required />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-email">Alamat Email</label>
+            <input type="email" id="reg-email" placeholder="nama@toko.com" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-password">Kata Sandi (Minimal 6 karakter)</label>
+            <input type="password" id="reg-password" placeholder="••••••••" required autocomplete="new-password" minlength="6" />
+          </div>
+
+          <div class="form-group">
+            <label for="reg-confirm">Ulangi Kata Sandi</label>
+            <input type="password" id="reg-confirm" placeholder="••••••••" required autocomplete="new-password" minlength="6" />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg auth-submit-btn" id="btn-submit-register">
+            <span>Buat Akun & Masuk</span>
+            <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+
+        <!-- 9Router Status Terminal -->
+        <div class="terminal-box">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="terminal-title">gateway: status</span>
+            </div>
+            <span class="terminal-ping">v2.0 • 0ms</span>
+          </div>
+          <div class="terminal-body">
+            <code>Supabase Auth: <span class="text-emerald">ACTIVE</span> • ESC/POS: <span class="text-emerald">READY</span></code>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="auth-footer">
+          <span>🔒 Autentikasi Cloud diamankan dengan Supabase Database</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .auth-page-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      background-color: var(--bg-main);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 9Router Ambient Glows */
+    .ambient-glow {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 550px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(20, 184, 166, 0.04) 50%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      border-radius: 9999px;
+      z-index: 0;
+    }
+
+    .ambient-glow-secondary {
+      position: absolute;
+      bottom: 10%;
+      right: 25%;
+      width: 380px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.07) 0%, transparent 70%);
+      filter: blur(70px);
+      pointer-events: none;
+      border-radius: 9999px;
+      z-index: 0;
+    }
+
+    .auth-card-wrapper {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .badge-container {
+      margin-bottom: 20px;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      font-size: 0.74rem;
+      font-family: var(--font-mono);
+      letter-spacing: -0.01em;
+    }
+
+    .auth-card {
+      width: 100%;
+      background: rgba(18, 18, 21, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .auth-icon {
+      width: 46px;
+      height: 46px;
+      background: #18181b;
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fafafa;
+      letter-spacing: -0.03em;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #10b981 0%, #5eead4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .auth-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* 9Router Tab Switcher */
+    .auth-tabs-router {
+      display: flex;
+      background: #0e0e11;
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 7px 12px;
+      border-radius: calc(var(--radius-sm) - 2px);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .tab-btn:hover {
+      color: #fafafa;
+    }
+
+    .tab-btn.active {
+      background: #27272a;
+      color: #fafafa;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .auth-alert {
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      font-family: var(--font-sans);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auth-submit-btn {
+      width: 100%;
+      margin-top: 6px;
+      padding: 11px 16px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #10b981;
+      color: #09090b;
+      border: none;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .auth-submit-btn:hover {
+      background: #34d399;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Terminal Box (9Router Signature) */
+    .terminal-box {
+      margin-top: 22px;
+      background: #09090b;
+      border: 1px solid var(--bg-card-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      font-family: var(--font-mono);
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: #121215;
+      border-bottom: 1px solid var(--bg-card-border);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    .terminal-dots {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .terminal-dots .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #27272a;
+    }
+
+    .terminal-title {
+      margin-left: 6px;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-ping {
+      color: #34d399;
+      font-size: 0.68rem;
+    }
+
+    .terminal-body {
+      padding: 8px 12px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .text-emerald {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.73rem;
+      color: var(--text-dim);
+    }
+  </style>
+
+  <script>
+    import { supabase } from '../lib/supabase';
+    import { authService } from '../lib/auth-service';
+
+    // Auto redirect to dashboard if session already exists
+    async function checkExistingSession() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.user) {
+          window.location.href = '/';
+        }
+      } catch (e) {
+        console.warn('Session check warning:', e);
+      }
+    }
+
+    checkExistingSession();
+
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const formLogin = document.getElementById('login-form') as HTMLFormElement;
+    const formRegister = document.getElementById('register-form') as HTMLFormElement;
+    const authAlert = document.getElementById('auth-alert');
+
+    function showAlert(message: string, isError = true) {
+      if (!authAlert) return;
+      authAlert.style.display = 'block';
+      authAlert.style.background = isError ? 'rgba(239, 68, 68, 0.16)' : 'rgba(16, 185, 129, 0.16)';
+      authAlert.style.color = isError ? '#f87171' : '#34d399';
+      authAlert.style.border = isError ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)';
+      authAlert.textContent = message;
+    }
+
+    if (tabLogin && tabRegister && formLogin && formRegister) {
+      tabLogin.addEventListener('click', () => {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        formLogin.style.display = 'flex';
+        formRegister.style.display = 'none';
+        if (authAlert) authAlert.style.display = 'none';
+      });
+
+      tabRegister.addEventListener('click', () => {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        formRegister.style.display = 'flex';
+        formLogin.style.display = 'none';
+        if (authAlert) authAlert.style.display = 'none';
+      });
+    }
+
+    // Handle Login Submit
+    if (formLogin) {
+      formLogin.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = (document.getElementById('login-email') as HTMLInputElement).value;
+        const password = (document.getElementById('login-password') as HTMLInputElement).value;
+        const btnSubmit = document.getElementById('btn-submit-login') as HTMLButtonElement;
+
+        if (!email || !password) {
+          showAlert('Email dan kata sandi wajib diisi.');
+          return;
+        }
+
+        try {
+          if (btnSubmit) {
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = 'Memverifikasi akun...';
+          }
+          await authService.login(email, password);
+          showAlert('Login berhasil! Mengalihkan ke Dashboard...', false);
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 400);
+        } catch (err: any) {
+          showAlert(err.message || 'Login gagal. Periksa kembali email dan kata sandi.');
+        } finally {
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<span>Masuk ke Dashboard POS</span> <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+          }
+        }
+      });
+    }
+
+    // Handle Register Submit
+    if (formRegister) {
+      formRegister.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = (document.getElementById('reg-name') as HTMLInputElement).value;
+        const store = (document.getElementById('reg-store') as HTMLInputElement).value;
+        const email = (document.getElementById('reg-email') as HTMLInputElement).value;
+        const password = (document.getElementById('reg-password') as HTMLInputElement).value;
+        const confirmPass = (document.getElementById('reg-confirm') as HTMLInputElement).value;
+        const btnSubmit = document.getElementById('btn-submit-register') as HTMLButtonElement;
+
+        if (password !== confirmPass) {
+          showAlert('Konfirmasi kata sandi tidak cocok.');
+          return;
+        }
+
+        try {
+          if (btnSubmit) {
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = 'Mendaftarkan akun...';
+          }
+          await authService.register(email, password, name, store);
+          showAlert('Pendaftaran berhasil! Mengalihkan ke Dashboard...', false);
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 600);
+        } catch (err: any) {
+          showAlert(err.message || 'Pendaftaran gagal.');
+        } finally {
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<span>Buat Akun & Masuk</span> <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+          }
+        }
+      });
+    }
+  </script>
+</Layout>

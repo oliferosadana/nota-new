@@ -1,0 +1,17 @@
+---
+---
+<div class="modal-backdrop" id="history-modal" role="dialog" aria-modal="true" aria-labelledby="history-modal-title">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title" id="history-modal-title">📜 Riwayat Transaksi Tersimpan</h3>
+      <button type="button" class="btn btn-outline btn-sm" id="btn-close-history" aria-label="Tutup riwayat">✕</button>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <span style="font-size: 0.8rem; color: var(--text-muted);" id="history-count">0 transaksi</span>
+      <button type="button" class="btn btn-danger-outline btn-sm" id="btn-clear-history">Hapus Riwayat</button>
+    </div>
+    <div id="history-list" style="max-height: 400px; overflow-y: auto;">
+      <!-- Injected dynamically from LocalStorage & Supabase sync -->
+    </div>
+  </div>
+</div>

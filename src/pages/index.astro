@@ -1,0 +1,405 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import CatalogModal from '../components/CatalogModal.astro';
+import HistoryModal from '../components/HistoryModal.astro';
+import AuthModal from '../components/AuthModal.astro';
+
+export const prerender = false;
+---
+
+<Layout title="ThermalPOS Pro - Kasir & Printer Thermal 58mm/80mm Fullstack Astro">
+  <Header />
+
+  <main class="app-container">
+    <!-- LEFT COLUMN: Form Editor -->
+    <div class="form-column">
+
+      <!-- Template Presets -->
+      <div class="panel-card" style="padding: 14px 20px;">
+        <label style="margin-bottom: 8px; display: block; font-weight: 600; font-size: 0.85rem;">⚡ Pilih Template Usaha:</label>
+        <div class="template-pills">
+          <button type="button" class="template-pill active" data-template="benthenk">🖥️ Benthenk Komputer</button>
+          <button type="button" class="template-pill" data-template="cafe">☕ Cafe & Coffee</button>
+          <button type="button" class="template-pill" data-template="resto">🍰 Kuliner & Resto</button>
+          <button type="button" class="template-pill" data-template="retail">🛒 Minimarket / Retail</button>
+          <button type="button" class="template-pill" data-template="laundry">🧺 Laundry Kiloan</button>
+          <button type="button" class="template-pill" data-template="service">🔧 Bengkel & Service</button>
+        </div>
+      </div>
+
+      <!-- Store & Receipt Info -->
+      <div class="panel-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+          <h2 class="panel-card-title" style="margin-bottom: 0; padding-bottom: 0; border: none;">
+            <span aria-hidden="true">🏪</span> Informasi Toko & Outlet
+            <span class="badge">Database</span>
+          </h2>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-save-store-db" title="Simpan pengaturan ke Database Supabase">
+            <span aria-hidden="true">💾</span> Simpan Profil Toko
+          </button>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="store-name">Nama Toko / Usaha</label>
+            <input type="text" id="store-name" value="UD BENTHENK KOMPUTER" placeholder="Nama Usaha" />
+          </div>
+          <div class="form-group">
+            <label for="store-tagline">Slogan / Keterangan (Opsional)</label>
+            <input type="text" id="store-tagline" value="" placeholder="Komp Balikpapan Baru..." />
+          </div>
+          <div class="form-group col-span-2">
+            <label for="store-address">Alamat Toko</label>
+            <input type="text" id="store-address" value="Komp Balikpapan Baru Blok C No.6" placeholder="Alamat lengkap..." />
+          </div>
+          <div class="form-group">
+            <label for="store-phone">No. Telp / WhatsApp</label>
+            <input type="text" id="store-phone" value="Telp: 085251822145 | 087886935070" placeholder="08xx-xxxx-xxxx" />
+          </div>
+          <div class="form-group">
+            <label for="store-logo-input">Upload Logo (Opsional)</label>
+            <input type="file" id="store-logo-input" accept="image/*" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Info -->
+      <div class="panel-card">
+        <h2 class="panel-card-title">
+          <span aria-hidden="true">📋</span> Data Transaksi
+          <span class="badge">Metadata</span>
+        </h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="tx-no">No. Nota / Invoice</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="text" id="tx-no" value="INV/2026/09/0839" style="flex:1;" />
+              <button type="button" class="btn btn-outline btn-sm" id="btn-gen-tx" title="Generate Nomor Otomatis" aria-label="Acak Nomor Nota">🎲</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="tx-date">Tanggal Transaksi</label>
+            <input type="text" id="tx-date" value="2026-09-30" />
+          </div>
+          <div class="form-group">
+            <label for="tx-time">Jam Transaksi</label>
+            <input type="text" id="tx-time" value="05:13" />
+          </div>
+          <div class="form-group">
+            <label for="tx-cashier">Kasir (Shift / Nama)</label>
+            <input type="text" id="tx-cashier" value="pagi" placeholder="pagi / siang / nama kasir" />
+          </div>
+          <div class="form-group">
+            <label for="tx-sales">Sales / Pramuniaga</label>
+            <input type="text" id="tx-sales" value="wiwik" placeholder="wiwik / nama sales" />
+          </div>
+          <div class="form-group">
+            <label for="tx-customer">Pelanggan (Opsional)</label>
+            <input type="text" id="tx-customer" value="" placeholder="Nama pelanggan / umum" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Section -->
+      <div class="panel-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h2 class="panel-card-title" style="margin-bottom: 0; padding-bottom: 0; border: none;">
+            <span aria-hidden="true">🛍️</span> Daftar Item / Produk
+          </h2>
+          <button type="button" class="btn btn-emerald btn-sm" id="btn-add-item">
+            <span aria-hidden="true">➕</span> Tambah Item
+          </button>
+        </div>
+
+        <div class="items-table-wrapper">
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th style="width: 40%;">Nama Barang / Jasa</th>
+                <th style="width: 15%;">Qty</th>
+                <th style="width: 25%;">Harga Satuan</th>
+                <th style="width: 15%;">Total</th>
+                <th style="width: 5%;"></th>
+              </tr>
+            </thead>
+            <tbody id="items-tbody">
+              <!-- Item rows injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Summary & Payment -->
+      <div class="panel-card">
+        <h2 class="panel-card-title">
+          <span aria-hidden="true">💳</span> Pembayaran & Kalkulasi
+          <span class="badge">Ringkasan</span>
+        </h2>
+
+        <div class="form-grid" style="margin-bottom: 16px;">
+          <div class="form-group">
+            <label for="calc-discount">Diskon Nota (Rp)</label>
+            <input type="number" id="calc-discount" value="0" min="0" step="500" />
+          </div>
+          <div class="form-group">
+            <label for="calc-tax">Pajak PPN (%)</label>
+            <input type="number" id="calc-tax" value="0" min="0" max="100" step="1" />
+          </div>
+          <div class="form-group">
+            <label for="calc-service-label">Deskripsi / Label Layanan</label>
+            <input type="text" id="calc-service-label" value="Layanan" placeholder="Contoh: Layanan / Ongkir / Biaya Admin" />
+          </div>
+          <div class="form-group">
+            <label for="calc-service">Biaya Layanan (Rp)</label>
+            <input type="number" id="calc-service" value="0" min="0" step="500" />
+          </div>
+          <div class="form-group">
+            <label for="payment-method">Metode Bayar</label>
+            <select id="payment-method">
+              <option value="TUNAI">TUNAI (Cash)</option>
+              <option value="QRIS" selected>QRIS</option>
+              <option value="DEBIT">Kartu Debit</option>
+              <option value="TRANSFER">Transfer Bank</option>
+              <option value="KREDIT">Kartu Kredit</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pay-amount">Uang Diterima / Bayar (Rp)</label>
+            <input type="number" id="pay-amount" value="900000" min="0" step="1000" />
+          </div>
+          <div class="form-group" style="justify-content: flex-end;">
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn btn-outline btn-sm" id="btn-pay-exact">Uang Pas</button>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-pay-50k">50k</button>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-pay-100k">100k</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-row">
+            <span>Subtotal Barang:</span>
+            <strong id="sum-subtotal">Rp 0</strong>
+          </div>
+          <div class="summary-row" id="sum-row-discount" style="display: none; color: #f87171;">
+            <span>Diskon:</span>
+            <strong id="sum-discount">- Rp 0</strong>
+          </div>
+          <div class="summary-row" id="sum-row-tax" style="display: none;">
+            <span>Pajak PPN:</span>
+            <strong id="sum-tax">+ Rp 0</strong>
+          </div>
+          <div class="summary-row" id="sum-row-service" style="display: none;">
+            <span id="sum-service-label">Layanan:</span>
+            <strong id="sum-service">+ Rp 0</strong>
+          </div>
+          <div class="summary-row total">
+            <span>TOTAL AKHIR:</span>
+            <span id="sum-grandtotal">Rp 0</span>
+          </div>
+          <div class="summary-row change">
+            <span>KEMBALIAN:</span>
+            <span id="sum-change">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer & Printer Options -->
+      <div class="panel-card">
+        <h2 class="panel-card-title">
+          <span aria-hidden="true">⚙️</span> Pengaturan Footer & Kustomisasi Nota
+        </h2>
+        <div class="form-grid">
+          <div class="form-group col-span-2">
+            <label for="footer-note">Pesan Terima Kasih / Keterangan Bawah</label>
+            <textarea id="footer-note" rows="2">Barang yang sudah dibeli tidak dapat ditukar&#10;atau dikembalikan&#10;Terima Kasih&#10;WA Admin : 085251822145</textarea>
+          </div>
+          <div class="form-group">
+            <label for="wifi-info">Info Wi-Fi (Opsional)</label>
+            <input type="text" id="wifi-info" value="" placeholder="SSID & Password" />
+          </div>
+          <div class="form-group">
+            <label for="qr-text">Isi QR Code (URL / Teks / WA)</label>
+            <input type="text" id="qr-text" value="" placeholder="Link web / WA..." />
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
+              <input type="checkbox" id="show-barcode" /> Tampilkan Barcode No. Nota
+            </label>
+          </div>
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
+              <input type="checkbox" id="show-qrcode" /> Tampilkan QR Code Footer
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Realtime Live Thermal Receipt Preview -->
+    <div class="preview-column">
+
+      <div class="preview-toolbar" style="flex-wrap: wrap; gap: 8px;">
+        <div class="paper-controls">
+          <button type="button" class="btn btn-outline btn-sm active-paper" id="btn-paper-58mm">58 mm (POS)</button>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-paper-80mm">80 mm</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label for="spacing-selector" style="font-size: 11px; color: var(--text-muted);">Spasi:</label>
+          <select id="spacing-selector" style="padding: 3px 8px; font-size: 11px; height: 28px;">
+            <option value="tight" selected>Rapat (Persis Foto)</option>
+            <option value="normal">Normal</option>
+            <option value="loose">Renggang</option>
+          </select>
+          <label for="ink-selector" style="font-size: 11px; color: var(--text-muted);">Tinta:</label>
+          <select id="ink-selector" style="padding: 3px 8px; font-size: 11px; height: 28px;">
+            <option value="heavy" selected>Pekat Thermal</option>
+            <option value="dotmatrix">Dot Matrix</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="preview-scroll-area">
+        <div class="thermal-paper-wrap width-58mm" id="receipt-wrap">
+          <div class="thermal-paper" id="receipt-paper">
+
+            <!-- Store Header -->
+            <div class="t-header">
+              <img id="t-logo" class="t-logo-img" src="/img/ben.jpeg" alt="Logo Benthenk" />
+              <div class="t-title" id="t-store-name">UD BENTHENK KOMPUTER</div>
+              <div class="t-subtitle" id="t-store-tagline" style="display: none;"></div>
+              <div class="t-address" id="t-store-address">Komp Balikpapan Baru Blok C No.6</div>
+              <div class="t-address" id="t-store-phone">Telp: 085251822145 | 087886935070</div>
+            </div>
+
+            <div class="t-divider"></div>
+
+            <!-- Transaction Meta -->
+            <div class="t-meta">
+              <div class="t-meta-grid">
+                <span><span id="t-tx-no">INV/2026/09/0839</span></span>
+                <span></span>
+              </div>
+              <div class="t-meta-grid">
+                <span id="t-tx-date">2026-09-30</span>
+                <span id="t-tx-cashier-row">Kasir: <span id="t-tx-cashier">pagi</span></span>
+              </div>
+              <div class="t-meta-grid">
+                <span id="t-tx-time">05:13</span>
+                <span id="t-tx-sales-row">Sales: <span id="t-tx-sales">wiwik</span></span>
+              </div>
+              <div class="t-meta-grid" id="t-customer-row" style="display: none;">
+                <span>Pelanggan:</span>
+                <span id="t-tx-customer"></span>
+              </div>
+            </div>
+
+            <div class="t-divider"></div>
+
+            <!-- Item List -->
+            <div class="t-items-list" id="t-items-container">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <div class="t-divider"></div>
+
+            <!-- Summary Calculations -->
+            <div class="t-summary" id="t-summary-box">
+              <div class="t-summary-row" id="t-row-subtotal">
+                <span>Subtotal</span>
+                <span id="t-sum-subtotal">900.000</span>
+              </div>
+              <div class="t-summary-row" id="t-row-discount" style="display: none;">
+                <span>Diskon</span>
+                <span id="t-sum-discount">- 0</span>
+              </div>
+              <div class="t-summary-row" id="t-row-tax" style="display: none;">
+                <span>PPN</span>
+                <span id="t-sum-tax">+ 0</span>
+              </div>
+              <div class="t-summary-row" id="t-row-service" style="display: none;">
+                <span id="t-sum-service-label">Layanan</span>
+                <span id="t-sum-service">+ 0</span>
+              </div>
+              <div class="t-summary-row bold" id="t-row-total">
+                <span>TOTAL</span>
+                <span id="t-sum-grandtotal">900.000</span>
+              </div>
+              <div class="t-divider" id="t-divider-payment"></div>
+              <div class="t-summary-row" id="t-row-pay">
+                <span id="t-pay-method">QRIS</span>
+                <span id="t-pay-amount">900.000</span>
+              </div>
+              <div class="t-summary-row" id="t-row-change" style="display: none;">
+                <span>KEMBALI</span>
+                <span id="t-sum-change">0</span>
+              </div>
+            </div>
+
+            <div class="t-divider"></div>
+
+            <!-- Footer Notes & Barcode/QR -->
+            <div class="t-footer">
+              <div id="t-footer-text" class="t-footer-lines">Barang yang sudah dibeli tidak dapat ditukar&#10;atau dikembalikan&#10;Terima Kasih&#10;WA Admin : 085251822145</div>
+              <div id="t-wifi-text" style="display: none; margin-top: 6px; font-size: 10.5px;"></div>
+              <div class="t-barcode-wrap" id="t-barcode-container" style="display: none;"></div>
+              <div class="t-qrcode-wrap" id="t-qrcode-container" style="display: none;"></div>
+            </div>
+
+          </div>
+          <div class="thermal-paper-bottom"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="preview-actions">
+        <button type="button" class="btn btn-primary btn-lg btn-print-main" id="btn-print-browser">
+          <span aria-hidden="true">🖨️</span> CETAK NOTA (Browser / Driver)
+        </button>
+        <button type="button" class="btn btn-emerald" id="btn-print-bt">
+          <span aria-hidden="true">📶</span> Cetak Bluetooth
+        </button>
+        <button type="button" class="btn btn-outline" id="btn-print-usb">
+          <span aria-hidden="true">🔌</span> Cetak USB / Serial
+        </button>
+        <button type="button" class="btn btn-outline" id="btn-save-image">
+          <span aria-hidden="true">🖼️</span> Simpan Gambar
+        </button>
+        <button type="button" class="btn btn-outline" id="btn-open-drawer">
+          <span aria-hidden="true">💵</span> Buka Laci Kasir
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <CatalogModal />
+  <HistoryModal />
+  <AuthModal />
+
+  <script>
+    import { supabase } from '../lib/supabase';
+    import { initPOS } from '../scripts/pos-engine';
+    
+    async function verifyAuthAndInit() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session || !session.user) {
+          window.location.href = '/login';
+          return;
+        }
+        initPOS();
+      } catch (err) {
+        console.warn('Auth check error:', err);
+        window.location.href = '/login';
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', verifyAuthAndInit);
+    } else {
+      verifyAuthAndInit();
+    }
+  </script>
+</Layout>

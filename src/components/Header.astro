@@ -1,0 +1,38 @@
+---
+---
+<header class="app-header">
+  <div class="brand-badge">
+    <div class="brand-icon" aria-hidden="true">🖨️</div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h1 class="brand-title">ThermalPOS <span class="brand-accent">Pro</span></h1>
+        <div class="status-pill" title="Sistem Direct ESC/POS & Cloud Supabase Aktif">
+          <span class="status-dot"></span>
+          <span>Online: ESC/POS</span>
+        </div>
+      </div>
+      <p class="brand-subtitle">High-Precision ESC/POS Direct & Cloud Database Gateway</p>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <!-- User Account Status Badge -->
+    <div id="auth-user-badge" style="display: none; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-full); font-size: 0.74rem; font-family: var(--font-mono); color: #34d399;">
+      <span aria-hidden="true">👤</span>
+      <span id="auth-user-email" style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500;">Kasir</span>
+    </div>
+
+    <button type="button" class="btn btn-outline btn-sm" id="btn-open-catalog" aria-label="Buka katalog produk">
+      <span aria-hidden="true">📦</span> Katalog DB
+    </button>
+    <button type="button" class="btn btn-outline btn-sm" id="btn-open-history" aria-label="Buka riwayat transaksi">
+      <span aria-hidden="true">📜</span> Riwayat
+    </button>
+    <button type="button" class="btn btn-primary btn-sm" id="btn-new-order" aria-label="Buat transaksi baru">
+      <span aria-hidden="true">⚡</span> Transaksi Baru
+    </button>
+    <button type="button" class="btn btn-outline btn-sm" id="btn-auth-action" aria-label="Buka menu akun kasir">
+      <span aria-hidden="true">🔒</span> Akun
+    </button>
+  </div>
+</header>

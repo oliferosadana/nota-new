@@ -1,0 +1,42 @@
+---
+---
+<div class="modal-backdrop" id="catalog-modal" role="dialog" aria-modal="true" aria-labelledby="catalog-modal-title">
+  <div class="modal-box" style="max-width: 680px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="catalog-modal-title">📦 Katalog Produk & Database</h3>
+      <button type="button" class="btn btn-outline btn-sm" id="btn-close-catalog" aria-label="Tutup katalog">✕</button>
+    </div>
+
+    <!-- Add Product to Database Form (Collapsible / Toggleable) -->
+    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--bg-card-border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 0.82rem; font-weight: 700; color: #60a5fa;">➕ Tambah Produk ke Database</span>
+      </div>
+      <form id="form-add-product" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; align-items: flex-end;">
+        <div>
+          <label for="new-prod-name" style="font-size: 0.72rem;">Nama Produk / Jasa</label>
+          <input type="text" id="new-prod-name" placeholder="Nama barang..." required style="padding: 6px 10px; font-size: 0.8rem; width: 100%;" />
+        </div>
+        <div>
+          <label for="new-prod-price" style="font-size: 0.72rem;">Harga (Rp)</label>
+          <input type="number" id="new-prod-price" placeholder="0" min="0" step="500" required style="padding: 6px 10px; font-size: 0.8rem; width: 100%;" />
+        </div>
+        <div>
+          <label for="new-prod-unit" style="font-size: 0.72rem;">Satuan</label>
+          <input type="text" id="new-prod-unit" placeholder="pcs" value="pcs" style="padding: 6px 10px; font-size: 0.8rem; width: 100%;" />
+        </div>
+        <button type="submit" class="btn btn-emerald btn-sm" id="btn-save-new-product" style="height: 35px; white-space: nowrap;">
+          <span>💾</span> Simpan
+        </button>
+      </form>
+    </div>
+
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+      Klik produk di bawah ini untuk langsung menambahkan ke struk:
+    </p>
+
+    <div class="catalog-grid" id="catalog-grid-items" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; max-height: 360px; overflow-y: auto; padding-right: 4px;">
+      <!-- Dynamic Products loaded from Database -->
+    </div>
+  </div>
+</div>
