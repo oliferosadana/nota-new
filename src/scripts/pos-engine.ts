@@ -971,6 +971,8 @@ export function initPOS() {
       btn58.classList.add('active-paper');
       btn80.classList.remove('active-paper');
       receiptWrap.className = 'thermal-paper-wrap width-58mm';
+      document.body.classList.remove('print-80mm');
+      document.body.classList.add('print-58mm');
       updateReceipt();
     });
 
@@ -979,8 +981,12 @@ export function initPOS() {
       btn80.classList.add('active-paper');
       btn58.classList.remove('active-paper');
       receiptWrap.className = 'thermal-paper-wrap width-80mm';
+      document.body.classList.remove('print-58mm');
+      document.body.classList.add('print-80mm');
       updateReceipt();
     });
+    // Set default print class
+    document.body.classList.add('print-58mm');
   }
 
   const spacingSelector = document.getElementById('spacing-selector') as HTMLSelectElement;
