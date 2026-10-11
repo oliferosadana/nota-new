@@ -30,23 +30,13 @@ export const prerender = false;
           <p class="auth-subtitle">Sistem Kasir Modern & Gateway Printer Thermal ESC/POS</p>
         </div>
 
-        <!-- Auth Tabs -->
-        <div class="auth-tabs-router">
-          <button type="button" class="tab-btn active" id="tab-login">
-            <span>Masuk Kasir</span>
-          </button>
-          <button type="button" class="tab-btn" id="tab-register">
-            <span>Daftar Akun Baru</span>
-          </button>
-        </div>
-
         <!-- Alert Notification -->
         <div id="auth-alert" class="auth-alert" style="display: none;" role="alert"></div>
 
         <!-- Form Login -->
         <form id="login-form" class="auth-form" novalidate>
           <div class="form-group">
-            <label for="login-email">Alamat Email</label>
+            <label for="login-email">Alamat Email Kasir</label>
             <input type="email" id="login-email" placeholder="kasir@toko.com" required autocomplete="email" autofocus />
           </div>
 
@@ -57,39 +47,6 @@ export const prerender = false;
 
           <button type="submit" class="btn btn-primary btn-lg auth-submit-btn" id="btn-submit-login">
             <span>Masuk ke Dashboard POS</span>
-            <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
-        </form>
-
-        <!-- Form Register -->
-        <form id="register-form" class="auth-form" style="display: none;" novalidate>
-          <div class="form-group">
-            <label for="reg-name">Nama Kasir / Petugas</label>
-            <input type="text" id="reg-name" placeholder="Contoh: Rina atau Kasir Pagi" required autocomplete="name" />
-          </div>
-
-          <div class="form-group">
-            <label for="reg-store">Nama Toko / Usaha</label>
-            <input type="text" id="reg-store" placeholder="Contoh: UD BENTHENK KOMPUTER" value="UD BENTHENK KOMPUTER" required />
-          </div>
-
-          <div class="form-group">
-            <label for="reg-email">Alamat Email</label>
-            <input type="email" id="reg-email" placeholder="nama@toko.com" required autocomplete="email" />
-          </div>
-
-          <div class="form-group">
-            <label for="reg-password">Kata Sandi (Minimal 6 karakter)</label>
-            <input type="password" id="reg-password" placeholder="••••••••" required autocomplete="new-password" minlength="6" />
-          </div>
-
-          <div class="form-group">
-            <label for="reg-confirm">Ulangi Kata Sandi</label>
-            <input type="password" id="reg-confirm" placeholder="••••••••" required autocomplete="new-password" minlength="6" />
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-lg auth-submit-btn" id="btn-submit-register">
-            <span>Buat Akun & Masuk</span>
             <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </button>
         </form>
@@ -235,41 +192,6 @@ export const prerender = false;
       line-height: 1.4;
     }
 
-    /* 9Router Tab Switcher */
-    .auth-tabs-router {
-      display: flex;
-      background: #0e0e11;
-      border: 1px solid var(--bg-card-border);
-      border-radius: var(--radius-sm);
-      padding: 3px;
-      margin-bottom: 20px;
-      gap: 4px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 7px 12px;
-      border-radius: calc(var(--radius-sm) - 2px);
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      text-align: center;
-    }
-
-    .tab-btn:hover {
-      color: #fafafa;
-    }
-
-    .tab-btn.active {
-      background: #27272a;
-      color: #fafafa;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    }
-
     .auth-alert {
       padding: 10px 14px;
       border-radius: var(--radius-sm);
@@ -393,10 +315,7 @@ export const prerender = false;
 
     checkExistingSession();
 
-    const tabLogin = document.getElementById('tab-login');
-    const tabRegister = document.getElementById('tab-register');
     const formLogin = document.getElementById('login-form') as HTMLFormElement;
-    const formRegister = document.getElementById('register-form') as HTMLFormElement;
     const authAlert = document.getElementById('auth-alert');
 
     function showAlert(message: string, isError = true) {
@@ -406,24 +325,6 @@ export const prerender = false;
       authAlert.style.color = isError ? '#f87171' : '#34d399';
       authAlert.style.border = isError ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)';
       authAlert.textContent = message;
-    }
-
-    if (tabLogin && tabRegister && formLogin && formRegister) {
-      tabLogin.addEventListener('click', () => {
-        tabLogin.classList.add('active');
-        tabRegister.classList.remove('active');
-        formLogin.style.display = 'flex';
-        formRegister.style.display = 'none';
-        if (authAlert) authAlert.style.display = 'none';
-      });
-
-      tabRegister.addEventListener('click', () => {
-        tabRegister.classList.add('active');
-        tabLogin.classList.remove('active');
-        formRegister.style.display = 'flex';
-        formLogin.style.display = 'none';
-        if (authAlert) authAlert.style.display = 'none';
-      });
     }
 
     // Handle Login Submit
@@ -455,43 +356,6 @@ export const prerender = false;
           if (btnSubmit) {
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<span>Masuk ke Dashboard POS</span> <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
-          }
-        }
-      });
-    }
-
-    // Handle Register Submit
-    if (formRegister) {
-      formRegister.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = (document.getElementById('reg-name') as HTMLInputElement).value;
-        const store = (document.getElementById('reg-store') as HTMLInputElement).value;
-        const email = (document.getElementById('reg-email') as HTMLInputElement).value;
-        const password = (document.getElementById('reg-password') as HTMLInputElement).value;
-        const confirmPass = (document.getElementById('reg-confirm') as HTMLInputElement).value;
-        const btnSubmit = document.getElementById('btn-submit-register') as HTMLButtonElement;
-
-        if (password !== confirmPass) {
-          showAlert('Konfirmasi kata sandi tidak cocok.');
-          return;
-        }
-
-        try {
-          if (btnSubmit) {
-            btnSubmit.disabled = true;
-            btnSubmit.textContent = 'Mendaftarkan akun...';
-          }
-          await authService.register(email, password, name, store);
-          showAlert('Pendaftaran berhasil! Mengalihkan ke Dashboard...', false);
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 600);
-        } catch (err: any) {
-          showAlert(err.message || 'Pendaftaran gagal.');
-        } finally {
-          if (btnSubmit) {
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = '<span>Buat Akun & Masuk</span> <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
           }
         }
       });

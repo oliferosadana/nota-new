@@ -1260,16 +1260,14 @@ export function initPOS() {
   const btnAuthAction = document.getElementById('btn-auth-action');
   const btnCloseAuth = document.getElementById('btn-close-auth');
   const tabBtnLogin = document.getElementById('tab-btn-login');
-  const tabBtnRegister = document.getElementById('tab-btn-register');
   const tabBtnConfig = document.getElementById('tab-btn-config');
   const formLogin = document.getElementById('form-login') as HTMLFormElement;
-  const formRegister = document.getElementById('form-register') as HTMLFormElement;
   const formConfig = document.getElementById('form-config') as HTMLFormElement;
   const authAlert = document.getElementById('auth-alert');
 
-  function setAuthTab(tab: 'login' | 'register' | 'config') {
-    [tabBtnLogin, tabBtnRegister, tabBtnConfig].forEach(btn => btn?.classList.remove('active'));
-    [formLogin, formRegister, formConfig].forEach(form => {
+  function setAuthTab(tab: 'login' | 'config') {
+    [tabBtnLogin, tabBtnConfig].forEach(btn => btn?.classList.remove('active'));
+    [formLogin, formConfig].forEach(form => {
       if (form) form.style.display = 'none';
     });
     if (authAlert) authAlert.style.display = 'none';
@@ -1277,9 +1275,6 @@ export function initPOS() {
     if (tab === 'login') {
       tabBtnLogin?.classList.add('active');
       if (formLogin) formLogin.style.display = 'grid';
-    } else if (tab === 'register') {
-      tabBtnRegister?.classList.add('active');
-      if (formRegister) formRegister.style.display = 'grid';
     } else {
       tabBtnConfig?.classList.add('active');
       if (formConfig) formConfig.style.display = 'grid';
@@ -1287,7 +1282,6 @@ export function initPOS() {
   }
 
   if (tabBtnLogin) tabBtnLogin.addEventListener('click', () => setAuthTab('login'));
-  if (tabBtnRegister) tabBtnRegister.addEventListener('click', () => setAuthTab('register'));
   if (tabBtnConfig) tabBtnConfig.addEventListener('click', () => setAuthTab('config'));
 
   if (btnAuthAction && authModal) {
@@ -1328,44 +1322,6 @@ export function initPOS() {
         }
       } finally {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<span aria-hidden="true">🔓</span> Masuk ke Akun'; }
-      }
-    });
-  }
-
-  if (formRegister) {
-    formRegister.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = (document.getElementById('reg-name') as HTMLInputElement).value;
-      const email = (document.getElementById('reg-email') as HTMLInputElement).value;
-      const password = (document.getElementById('reg-password') as HTMLInputElement).value;
-      const confirmPass = (document.getElementById('reg-confirm-password') as HTMLInputElement).value;
-      const submitBtn = document.getElementById('btn-submit-register') as HTMLButtonElement;
-
-      if (password !== confirmPass) {
-        if (authAlert) {
-          authAlert.style.display = 'block';
-          authAlert.style.background = 'rgba(239, 68, 68, 0.15)';
-          authAlert.style.color = '#f87171';
-          authAlert.textContent = 'Konfirmasi kata sandi tidak cocok.';
-        }
-        return;
-      }
-
-      try {
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Mendaftarkan...'; }
-        const storeName = (document.getElementById('store-name') as HTMLInputElement)?.value || 'UD BENTHENK KOMPUTER';
-        await authService.register(email, password, name, storeName);
-        showToast('Pendaftaran berhasil!', 'success');
-        authModal?.classList.remove('open');
-      } catch (err: any) {
-        if (authAlert) {
-          authAlert.style.display = 'block';
-          authAlert.style.background = 'rgba(239, 68, 68, 0.15)';
-          authAlert.style.color = '#f87171';
-          authAlert.textContent = err.message;
-        }
-      } finally {
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<span aria-hidden="true">✨</span> Daftarkan Akun Baru'; }
       }
     });
   }
