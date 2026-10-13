@@ -462,32 +462,82 @@ input::placeholder, textarea::placeholder {
 }
 
 .thermal-paper-wrap.width-58mm {
-  width: 310px;
+  width: 290px;
 }
 
 .thermal-paper-wrap.width-80mm {
-  width: 420px;
+  width: 400px;
 }
 
 .thermal-paper {
   background: #ffffff;
   color: #000000;
-  padding: 18px 12px 22px 12px;
+  padding: 16px 12px 20px 12px;
   font-family: var(--font-thermal);
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.25;
   position: relative;
   border-radius: 4px 4px 0 0;
   user-select: text;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
+  box-sizing: border-box;
+}
+
+/* 58mm screen adjustments (scaled proportion) */
+.thermal-paper-wrap.width-58mm .thermal-paper {
+  padding: 14px 10px 18px 10px;
+  font-size: 11.5px;
+}
+.thermal-paper-wrap.width-58mm .t-title {
+  font-size: 14.5px;
+}
+.thermal-paper-wrap.width-58mm .t-subtitle,
+.thermal-paper-wrap.width-58mm .t-address,
+.thermal-paper-wrap.width-58mm .t-meta {
+  font-size: 11.5px;
+}
+.thermal-paper-wrap.width-58mm .t-item-name {
+  font-size: 12px;
+}
+.thermal-paper-wrap.width-58mm .t-item-calc,
+.thermal-paper-wrap.width-58mm .t-summary {
+  font-size: 11.5px;
+}
+.thermal-paper-wrap.width-58mm .t-summary-row.bold {
+  font-size: 14.5px;
+}
+
+/* 80mm screen adjustments (scaled proportion) */
+.thermal-paper-wrap.width-80mm .thermal-paper {
+  padding: 16px 14px 20px 14px;
+  font-size: 12.5px;
+}
+.thermal-paper-wrap.width-80mm .t-title {
+  font-size: 16.5px;
+}
+.thermal-paper-wrap.width-80mm .t-subtitle,
+.thermal-paper-wrap.width-80mm .t-address,
+.thermal-paper-wrap.width-80mm .t-meta {
+  font-size: 12.5px;
+}
+.thermal-paper-wrap.width-80mm .t-item-name {
+  font-size: 13px;
+}
+.thermal-paper-wrap.width-80mm .t-item-calc,
+.thermal-paper-wrap.width-80mm .t-summary {
+  font-size: 12.5px;
+}
+.thermal-paper-wrap.width-80mm .t-summary-row.bold {
+  font-size: 16.5px;
 }
 
 /* Spacing modes */
 .thermal-paper.spacing-tight .t-header { margin-bottom: 4px; }
 .thermal-paper.spacing-tight .t-divider { margin: 4px 0; border-top: 1px dashed rgba(0,0,0,0.65); }
 .thermal-paper.spacing-tight .t-meta-grid { margin-bottom: 1px; }
-.thermal-paper.spacing-tight .t-item-block { margin-bottom: 3px; }
+.thermal-paper.spacing-tight .t-item-block,
+.thermal-paper.spacing-tight .t-item { margin-bottom: 3px; }
 .thermal-paper.spacing-tight .t-summary-row { margin-bottom: 1px; }
 .thermal-paper.spacing-tight .t-footer { margin-top: 5px; }
 
@@ -553,6 +603,7 @@ input::placeholder, textarea::placeholder {
 .t-divider {
   border-top: 1px dashed rgba(0, 0, 0, 0.65);
   margin: 4px 0;
+  width: 100%;
 }
 
 .t-meta {
@@ -563,17 +614,37 @@ input::placeholder, textarea::placeholder {
 }
 
 .t-meta-grid {
-  display: flex;
-  justify-content: space-between;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  white-space: nowrap !important;
+  width: 100% !important;
   margin-bottom: 1px;
+}
+
+.t-meta-grid > span:first-child {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex: 1 1 auto !important;
+}
+
+.t-meta-grid > span:last-child {
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+  text-align: right !important;
+  margin-left: 8px !important;
 }
 
 .t-items-list {
   margin: 3px 0;
+  width: 100%;
 }
 
-.t-item-block {
+.t-item-block,
+.t-item {
   margin-bottom: 3px;
+  width: 100%;
 }
 
 .t-item-name {
@@ -583,27 +654,64 @@ input::placeholder, textarea::placeholder {
   word-break: break-word;
   color: #000;
   margin-bottom: 1px;
+  line-height: 1.25;
 }
 
 .t-item-calc {
-  display: flex;
-  justify-content: space-between;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  white-space: nowrap !important;
+  width: 100% !important;
   font-size: 12.5px;
   font-weight: 700;
   color: #000;
+}
+
+.t-item-calc > span:first-child {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex: 1 1 auto !important;
+}
+
+.t-item-calc > span.t-item-total,
+.t-item-calc > span:last-child {
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+  text-align: right !important;
+  margin-left: 8px !important;
+  font-variant-numeric: tabular-nums !important;
 }
 
 .t-summary {
   font-size: 12.5px;
   font-weight: 700;
+  width: 100%;
 }
 
 .t-summary-row {
-  display: flex;
-  justify-content: space-between;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  white-space: nowrap !important;
+  width: 100% !important;
   margin-bottom: 1px;
   font-weight: 700;
   color: #000;
+}
+
+.t-summary-row > span:first-child {
+  white-space: nowrap !important;
+  flex: 1 1 auto !important;
+}
+
+.t-summary-row > span:last-child {
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+  text-align: right !important;
+  margin-left: 8px !important;
+  font-variant-numeric: tabular-nums !important;
 }
 
 .t-summary-row.bold {
@@ -788,33 +896,52 @@ input::placeholder, textarea::placeholder {
 @media print {
   @page {
     margin: 0;
-    size: auto;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   body {
-    background: #fff !important;
-    color: #000 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    visibility: hidden;
+    visibility: hidden !important;
   }
 
+  /* Hide interactive UI elements on print */
   .app-header,
   .form-column,
   .preview-toolbar,
   .preview-actions,
   .thermal-paper-bottom,
   .modal-backdrop,
-  .toast-container {
+  .toast-container,
+  .btn,
+  header,
+  nav,
+  aside {
     display: none !important;
   }
 
   .preview-column {
     position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     margin: 0 !important;
-    visibility: visible;
+    visibility: visible !important;
+    overflow: visible !important;
   }
 
   .preview-scroll-area {
@@ -823,92 +950,229 @@ input::placeholder, textarea::placeholder {
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    visibility: visible;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    visibility: visible !important;
+    overflow: visible !important;
   }
 
   .thermal-paper-wrap {
     filter: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
+    box-shadow: none !important;
+    margin: 0 auto !important;
     padding: 0 !important;
-    visibility: visible;
+    visibility: visible !important;
+    display: block !important;
   }
 
   .thermal-paper {
     visibility: visible !important;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 2mm 3mm !important;
-    margin: 0 !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 auto !important;
     font-family: 'Roboto Condensed', 'Segoe UI', Arial, sans-serif !important;
-    font-size: 12.5px !important;
-    line-height: 1.35 !important;
-    color: #000 !important;
-    background: #fff !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
   }
 
-  /* Support 58mm width constraints on print */
-  body.print-58mm .thermal-paper {
-    width: 58mm !important;
-    max-width: 58mm !important;
+  /* 80mm Physical Thermal Paper Layout (Safe Print Head = 72mm) */
+  body.print-80mm .thermal-paper-wrap {
+    width: 72mm !important;
+    max-width: 72mm !important;
+    min-width: 72mm !important;
   }
 
   body.print-80mm .thermal-paper {
-    width: 80mm !important;
-    max-width: 80mm !important;
+    width: 72mm !important;
+    max-width: 72mm !important;
+    min-width: 72mm !important;
+    padding: 1.5mm 2.5mm 3.5mm 2.5mm !important;
+    font-size: 10pt !important;
+    line-height: 1.25 !important;
   }
 
-  .t-title {
+  body.print-80mm .t-title {
     font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
-    font-size: 16.5px !important;
+    font-size: 13.5pt !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.2px !important;
+    -webkit-text-stroke: 0.5px #000 !important;
+  }
+
+  body.print-80mm .t-subtitle,
+  body.print-80mm .t-address {
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+  }
+
+  body.print-80mm .t-meta {
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+  }
+
+  body.print-80mm .t-item-name {
+    font-size: 10.5pt !important;
+    font-weight: 800 !important;
+  }
+
+  body.print-80mm .t-item-calc,
+  body.print-80mm .t-summary {
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+  }
+
+  body.print-80mm .t-summary-row.bold {
+    font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
+    font-size: 13.5pt !important;
     font-weight: 900 !important;
     -webkit-text-stroke: 0.5px #000 !important;
   }
 
-  .t-subtitle,
-  .t-address {
-    font-size: 13px !important;
+  body.print-80mm #t-row-pay {
+    font-size: 10.5pt !important;
+    font-weight: 800 !important;
+  }
+
+  body.print-80mm .t-footer {
+    font-size: 9pt !important;
     font-weight: 700 !important;
   }
 
-  .t-meta {
-    font-size: 12.5px !important;
+  /* 58mm Physical Thermal Paper Layout (Safe Print Head = 48mm) */
+  body.print-58mm .thermal-paper-wrap {
+    width: 48mm !important;
+    max-width: 48mm !important;
+    min-width: 48mm !important;
+  }
+
+  body.print-58mm .thermal-paper {
+    width: 48mm !important;
+    max-width: 48mm !important;
+    min-width: 48mm !important;
+    padding: 1mm 1.5mm 2.5mm 1.5mm !important;
+    font-size: 8pt !important;
+    line-height: 1.22 !important;
+  }
+
+  body.print-58mm .t-title {
+    font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
+    font-size: 10.5pt !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.1px !important;
+    -webkit-text-stroke: 0.4px #000 !important;
+  }
+
+  body.print-58mm .t-subtitle,
+  body.print-58mm .t-address {
+    font-size: 8pt !important;
     font-weight: 700 !important;
+  }
+
+  body.print-58mm .t-meta {
+    font-size: 8pt !important;
+    font-weight: 700 !important;
+  }
+
+  body.print-58mm .t-item-name {
+    font-size: 8.5pt !important;
+    font-weight: 800 !important;
+  }
+
+  body.print-58mm .t-item-calc,
+  body.print-58mm .t-summary {
+    font-size: 8pt !important;
+    font-weight: 700 !important;
+  }
+
+  body.print-58mm .t-summary-row.bold {
+    font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
+    font-size: 10.5pt !important;
+    font-weight: 900 !important;
+    -webkit-text-stroke: 0.4px #000 !important;
+  }
+
+  body.print-58mm #t-row-pay {
+    font-size: 8.5pt !important;
+    font-weight: 800 !important;
+  }
+
+  body.print-58mm .t-footer {
+    font-size: 7.5pt !important;
+    font-weight: 700 !important;
+  }
+
+  /* Layout alignment guarantees in print: NO WRAP, NO CUTOFF */
+  .t-meta-grid,
+  .t-item-calc,
+  .t-summary-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: baseline !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .t-meta-grid > span:first-child,
+  .t-item-calc > span:first-child,
+  .t-summary-row > span:first-child {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .t-meta-grid > span:last-child,
+  .t-item-calc > span.t-item-total,
+  .t-item-calc > span:last-child,
+  .t-summary-row > span:last-child {
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    text-align: right !important;
+    margin-left: 4px !important;
+    font-variant-numeric: tabular-nums !important;
   }
 
   .t-item-name {
-    font-size: 13.5px !important;
-    font-weight: 800 !important;
-  }
-
-  .t-item-calc,
-  .t-summary {
-    font-size: 12.5px !important;
-    font-weight: 700 !important;
-  }
-
-  .t-summary-row.bold {
-    font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
-    font-size: 16.5px !important;
-    font-weight: 900 !important;
-    -webkit-text-stroke: 0.5px #000 !important;
-  }
-
-  #t-row-pay {
-    font-size: 13.5px !important;
-    font-weight: 800 !important;
-  }
-
-  .t-footer {
-    font-size: 12.5px !important;
-    font-weight: 700 !important;
+    word-break: break-word !important;
+    line-height: 1.25 !important;
   }
 
   .t-divider {
     border-top: 1px dashed #000 !important;
+    width: 100% !important;
+    margin: 3px 0 !important;
+  }
+
+  .t-header {
+    margin-bottom: 2px !important;
+  }
+
+  .t-logo-img {
+    max-width: 50px !important;
+    max-height: 50px !important;
+    margin: 0 auto 2px auto !important;
+  }
+
+  body.print-80mm .t-logo-img {
+    max-width: 65px !important;
+    max-height: 65px !important;
+  }
+
+  .t-footer-lines {
+    white-space: pre-line !important;
+    line-height: 1.25 !important;
   }
 }

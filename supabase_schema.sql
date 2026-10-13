@@ -116,9 +116,9 @@ values (
   '',
   false,
   false,
-  '[{"name": "MEM VENOM RX DDR4 8GB/2666", "qty": 1, "unit": "pcs", "price": 900000}]'::jsonb,
+  '[{"name": "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", "qty": 1, "unit": "pcs", "price": 900000}]'::jsonb,
   '[
-    {"name": "MEM VENOM RX DDR4 8GB/2666", "unit": "pcs", "price": 900000},
+    {"name": "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", "unit": "pcs", "price": 900000},
     {"name": "SSD NVMe 512GB PCIe Gen3", "unit": "pcs", "price": 420000},
     {"name": "SSD SATA 2.5 256GB", "unit": "pcs", "price": 235000},
     {"name": "RAM DDR4 8GB 3200MHz", "unit": "pcs", "price": 280000},

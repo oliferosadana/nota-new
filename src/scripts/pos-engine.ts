@@ -33,9 +33,9 @@ export const PRESETS: Record<string, any> = {
     tagline: "",
     address: "Komp Balikpapan Baru Blok C No.6",
     phone: "Telp: 085251822145 | 087886935070",
-    txNo: "INV/2026/09/0839",
-    date: "2026-09-30",
-    time: "05:13",
+    txNo: "INV/2026/10/0158",
+    date: "2026-10-13",
+    time: "11:05",
     cashier: "pagi",
     sales: "wiwik",
     customer: "",
@@ -49,10 +49,10 @@ export const PRESETS: Record<string, any> = {
     showBarcode: false,
     showQrcode: false,
     items: [
-      { name: "MEM VENOM RX DDR4 8GB/2666", qty: 1, unit: "pcs", price: 900000 }
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 900000 }
     ],
     catalog: [
-      { name: "MEM VENOM RX DDR4 8GB/2666", unit: "pcs", price: 900000 },
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", unit: "pcs", price: 900000 },
       { name: "SSD NVMe 512GB PCIe Gen3", unit: "pcs", price: 420000 },
       { name: "SSD SATA 2.5 256GB", unit: "pcs", price: 235000 },
       { name: "RAM DDR4 8GB 3200MHz", unit: "pcs", price: 280000 },
@@ -599,7 +599,7 @@ export async function renderCatalogModal() {
   container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Memuat produk dari database...</div>';
 
   const preset = PRESETS[state.activeTemplate] || PRESETS.benthenk;
-  
+
   // Combine preset catalog with custom database products
   let allCatalog: any[] = [];
   if (state.dbProducts && state.dbProducts.length > 0) {
@@ -614,7 +614,7 @@ export async function renderCatalogModal() {
     const card = document.createElement('div');
     card.className = 'catalog-card';
     card.style.cssText = 'background: rgba(255,255,255,0.04); border: 1px solid var(--bg-card-border); border-radius: var(--radius-sm); padding: 10px; cursor: pointer; transition: all 0.2s; position: relative;';
-    
+
     card.innerHTML = `
       <div style="font-weight: 600; font-size: 0.82rem; color: #fff; margin-bottom: 4px;">${catItem.name}</div>
       <div style="font-size: 0.78rem; font-weight: 700; color: #34d399;">Rp ${formatRp(catItem.price)} <span style="font-size: 0.68rem; color: var(--text-dim); font-weight: 400;">/ ${catItem.unit || 'pcs'}</span></div>
@@ -947,6 +947,36 @@ export function buildEscPosPayload(): Uint8Array {
   return builder.getUint8Array();
 }
 
+export function applyPrintPaperStyle(paperSize: string = '58mm') {
+  if (typeof document === 'undefined') return;
+  let styleEl = document.getElementById('dynamic-print-page-style') as HTMLStyleElement;
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'dynamic-print-page-style';
+    document.head.appendChild(styleEl);
+  }
+
+  if (paperSize === '80mm') {
+    styleEl.textContent = `
+      @page {
+        size: 80mm auto !important;
+        margin: 0mm !important;
+      }
+    `;
+    document.body.classList.remove('print-58mm');
+    document.body.classList.add('print-80mm');
+  } else {
+    styleEl.textContent = `
+      @page {
+        size: 58mm auto !important;
+        margin: 0mm !important;
+      }
+    `;
+    document.body.classList.remove('print-80mm');
+    document.body.classList.add('print-58mm');
+  }
+}
+
 export function initPOS() {
   loadTemplate('benthenk');
 
@@ -971,8 +1001,7 @@ export function initPOS() {
       btn58.classList.add('active-paper');
       btn80.classList.remove('active-paper');
       receiptWrap.className = 'thermal-paper-wrap width-58mm';
-      document.body.classList.remove('print-80mm');
-      document.body.classList.add('print-58mm');
+      applyPrintPaperStyle('58mm');
       updateReceipt();
     });
 
@@ -981,12 +1010,11 @@ export function initPOS() {
       btn80.classList.add('active-paper');
       btn58.classList.remove('active-paper');
       receiptWrap.className = 'thermal-paper-wrap width-80mm';
-      document.body.classList.remove('print-58mm');
-      document.body.classList.add('print-80mm');
+      applyPrintPaperStyle('80mm');
       updateReceipt();
     });
-    // Set default print class
-    document.body.classList.add('print-58mm');
+    // Set default print class and dynamic @page style
+    applyPrintPaperStyle(state.paperSize || '58mm');
   }
 
   const spacingSelector = document.getElementById('spacing-selector') as HTMLSelectElement;
@@ -1136,6 +1164,7 @@ export function initPOS() {
   if (btnPrintBrowser) {
     btnPrintBrowser.addEventListener('click', () => {
       saveTransaction();
+      applyPrintPaperStyle(state.paperSize || '58mm');
       window.print();
     });
   }

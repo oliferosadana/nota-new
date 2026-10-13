@@ -44,14 +44,14 @@ const PRESETS = {
     tagline: "",
     address: "Komp Balikpapan Baru Blok C No.6",
     phone: "Telp: 085251822145 | 087886935070",
-    txNo: "INV/2026/09/0839",
-    date: "2026-09-30",
-    time: "05:13",
+    txNo: "INV/2026/10/0158",
+    date: "2026-10-13",
+    time: "11:05",
     cashier: "pagi",
     sales: "wiwik",
     customer: "",
     paymentMethod: "QRIS",
-    payAmount: 900000,
+    payAmount: 249000,
     footer: "Barang yang sudah dibeli tidak dapat ditukar\natau dikembalikan\nTerima Kasih\nWA Admin : 085251822145",
     wifi: "",
     qr: "",
@@ -60,10 +60,10 @@ const PRESETS = {
     showBarcode: false,
     showQrcode: false,
     items: [
-      { name: "MEM VENOM RX DDR4 8GB/2666", qty: 1, unit: "pcs", price: 900000 }
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 249000 }
     ],
     catalog: [
-      { name: "MEM VENOM RX DDR4 8GB/2666", unit: "pcs", price: 900000 },
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", unit: "pcs", price: 249000 },
       { name: "SSD NVMe 512GB PCIe Gen3", unit: "pcs", price: 420000 },
       { name: "SSD SATA 2.5 256GB", unit: "pcs", price: 235000 },
       { name: "RAM DDR4 8GB 3200MHz", unit: "pcs", price: 280000 },
@@ -706,14 +706,42 @@ function bindEvents() {
   inkSel.addEventListener('change', applyPaperClasses);
   applyPaperClasses(); // apply default tight spacing and heavy ink on startup
 
+  function applyPrintPaperStyle(paperSize = '58mm') {
+    let styleEl = document.getElementById('dynamic-print-page-style');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'dynamic-print-page-style';
+      document.head.appendChild(styleEl);
+    }
+
+    if (paperSize === '80mm') {
+      styleEl.textContent = `
+        @page {
+          size: 80mm auto !important;
+          margin: 0mm !important;
+        }
+      `;
+      document.body.classList.remove('print-58mm');
+      document.body.classList.add('print-80mm');
+    } else {
+      styleEl.textContent = `
+        @page {
+          size: 58mm auto !important;
+          margin: 0mm !important;
+        }
+      `;
+      document.body.classList.remove('print-80mm');
+      document.body.classList.add('print-58mm');
+    }
+  }
+
   btn58.addEventListener('click', () => {
     AppState.paperWidth = '58mm';
     wrap.classList.remove('width-80mm');
     wrap.classList.add('width-58mm');
     btn58.style.background = 'rgba(59, 130, 246, 0.25)';
     btn80.style.background = 'transparent';
-    document.body.classList.remove('print-80mm');
-    document.body.classList.add('print-58mm');
+    applyPrintPaperStyle('58mm');
     showToast("Ukuran kertas diatur ke 58 mm", "info");
   });
 
@@ -723,10 +751,12 @@ function bindEvents() {
     wrap.classList.add('width-80mm');
     btn80.style.background = 'rgba(59, 130, 246, 0.25)';
     btn58.style.background = 'transparent';
-    document.body.classList.remove('print-58mm');
-    document.body.classList.add('print-80mm');
+    applyPrintPaperStyle('80mm');
     showToast("Ukuran kertas diatur ke 80 mm", "info");
   });
+
+  // Apply default print paper style
+  applyPrintPaperStyle(AppState.paperWidth || '58mm');
 
   // Logo upload preview
   const logoInput = document.getElementById('store-logo-input');
@@ -786,6 +816,7 @@ function bindEvents() {
   // PRINT: Standard Browser / System Driver Print
   document.getElementById('btn-print-browser').addEventListener('click', () => {
     saveCurrentTransactionToHistory();
+    applyPrintPaperStyle(AppState.paperWidth || '58mm');
     window.print();
   });
 
@@ -1099,9 +1130,9 @@ function buildEscPosPayload() {
   builder.divider('-');
 
   // Meta lines matching photo:
-  // INV/2026/09/0839
-  // 2026-09-30          Kasir: pagi
-  // 05:13               Sales: wiwik
+  // INV/2026/10/0158
+  // 2026-10-13          Kasir: pagi
+  // 11:05               Sales: wiwik
   builder.twoColumns(txNo, '')
     .twoColumns(txDate, `Kasir: ${txCashier}`)
     .twoColumns(txTime, txSales ? `Sales: ${txSales}` : '')
