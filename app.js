@@ -38,7 +38,59 @@ const BENTHENK_LOGO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org
 </svg>`;
 
 // Preset Templates
+const FUEL_PRICES = {
+  PERTALITE: { non: 18101, sub: 8101, jual: 10000 },
+  SOLAR: { non: 15500, sub: 8700, jual: 6800 },
+  PERTAMAX: { non: 12100, sub: 0, jual: 12100 },
+  "PERTAMAX TURBO": { non: 13250, sub: 0, jual: 13250 },
+  DEXLITE: { non: 13050, sub: 0, jual: 13050 },
+  "PERTAMINA DEX": { non: 13400, sub: 0, jual: 13400 }
+};
+
 const PRESETS = {
+  spbu: {
+    spbuCode: "6476128",
+    spbuName: "SPBU 64/6128",
+    address: "JALAN SULTAN HASANUDIN",
+    shift: "1",
+    noTrans: "138762",
+    time: "12/10/2026 10:35:26",
+    pompa: "6",
+    operator: "SALWA",
+    fuelType: "PERTALITE",
+    volume: 3.00,
+    priceNonSubsidi: 18101,
+    priceSubsidi: 8101,
+    priceJual: 10000,
+    paymentMethod: "CASH",
+    payAmount: 30000,
+    storeName: "SPBU 64/6128 PERTAMINA",
+    tagline: "",
+    phone: "",
+    txNo: "138762",
+    date: "2026-10-12",
+    cashier: "SALWA",
+    sales: "1",
+    customer: "",
+    footer: "Anda mendapat subsidi dari\nPemerintah sebesar Rp 24,303\n(Perhitungan Subsidi Unaudited\natau Estimasi). Gunakan BBM\nSubsidi secara bijak.",
+    wifi: "",
+    qr: "",
+    showLogo: true,
+    logoUrl: null,
+    showBarcode: false,
+    showQrcode: false,
+    items: [
+      { name: "PERTALITE (3.00 Liter)", qty: 3, unit: "liter", price: 10000 }
+    ],
+    catalog: [
+      { name: "PERTALITE", unit: "liter", price: 10000 },
+      { name: "BIO SOLAR", unit: "liter", price: 6800 },
+      { name: "PERTAMAX", unit: "liter", price: 12100 },
+      { name: "PERTAMAX TURBO", unit: "liter", price: 13250 },
+      { name: "DEXLITE", unit: "liter", price: 13050 },
+      { name: "PERTAMINA DEX", unit: "liter", price: 13400 }
+    ]
+  },
   benthenk: {
     storeName: "UD BENTHENK KOMPUTER",
     tagline: "",
@@ -60,10 +112,10 @@ const PRESETS = {
     showBarcode: false,
     showQrcode: false,
     items: [
-      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 249000 }
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET HUB 2IN1 USB TO LANADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 249000 }
     ],
     catalog: [
-      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", unit: "pcs", price: 249000 },
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET HUB 2IN1 USB TO LANADAPTER ETHERNET CONV...", unit: "pcs", price: 249000 },
       { name: "SSD NVMe 512GB PCIe Gen3", unit: "pcs", price: 420000 },
       { name: "SSD SATA 2.5 256GB", unit: "pcs", price: 235000 },
       { name: "RAM DDR4 8GB 3200MHz", unit: "pcs", price: 280000 },
@@ -314,46 +366,97 @@ function loadTemplate(tplKey) {
   AppState.items = JSON.parse(JSON.stringify(tpl.items));
   AppState.currentCatalog = tpl.catalog || [];
 
-  document.getElementById('store-name').value = tpl.storeName;
-  document.getElementById('store-tagline').value = tpl.tagline || '';
-  document.getElementById('store-address').value = tpl.address;
-  document.getElementById('store-phone').value = tpl.phone;
-  document.getElementById('tx-no').value = tpl.txNo || generateTxId();
-  document.getElementById('tx-date').value = tpl.date || getNowDate();
-  document.getElementById('tx-time').value = tpl.time || getNowTime();
-  document.getElementById('tx-cashier').value = tpl.cashier;
-  document.getElementById('tx-sales').value = tpl.sales || '';
-  document.getElementById('tx-customer').value = tpl.customer || '';
-  document.getElementById('payment-method').value = tpl.paymentMethod || 'TUNAI';
-  document.getElementById('footer-note').value = tpl.footer;
-  document.getElementById('wifi-info').value = tpl.wifi || '';
-  document.getElementById('qr-text').value = tpl.qr || '';
-  document.getElementById('show-barcode').checked = !!tpl.showBarcode;
-  document.getElementById('show-qrcode').checked = !!tpl.showQrcode;
-  if (document.getElementById('calc-service-label')) {
-    document.getElementById('calc-service-label').value = tpl.serviceLabel || 'Layanan';
-  }
-  if (document.getElementById('calc-service')) {
-    document.getElementById('calc-service').value = tpl.serviceFee || 0;
-  }
+  const retailPanel = document.getElementById('retail-editor-panel');
+  const spbuPanel = document.getElementById('spbu-editor-panel');
+  const retailView = document.getElementById('receipt-retail-view');
+  const spbuView = document.getElementById('receipt-spbu-view');
 
-  const logoImg = document.getElementById('t-logo');
-  if (tpl.showLogo && tpl.logoUrl) {
-    AppState.currentLogoData = tpl.logoUrl;
-    logoImg.src = tpl.logoUrl;
-    logoImg.style.display = 'block';
+  if (tplKey === 'spbu') {
+    if (retailPanel) retailPanel.style.display = 'none';
+    if (spbuPanel) spbuPanel.style.display = 'block';
+    if (retailView) retailView.style.display = 'none';
+    if (spbuView) spbuView.style.display = 'block';
+
+    const spbuCode = document.getElementById('spbu-code');
+    const spbuName = document.getElementById('spbu-name');
+    const spbuAddress = document.getElementById('spbu-address');
+    const spbuShift = document.getElementById('spbu-shift');
+    const spbuNotrans = document.getElementById('spbu-notrans');
+    const spbuTime = document.getElementById('spbu-time');
+    const spbuPompa = document.getElementById('spbu-pompa');
+    const spbuOperator = document.getElementById('spbu-operator');
+    const spbuFuel = document.getElementById('spbu-fuel');
+    const spbuVolume = document.getElementById('spbu-volume');
+    const spbuPriceNon = document.getElementById('spbu-price-nonsubsidi');
+    const spbuPriceSub = document.getElementById('spbu-price-subsidi');
+    const spbuPriceJual = document.getElementById('spbu-price-jual');
+    const spbuPayMethod = document.getElementById('spbu-pay-method-input');
+    const spbuPayAmount = document.getElementById('spbu-pay-amount-input');
+
+    if (spbuCode) spbuCode.value = tpl.spbuCode || '6476128';
+    if (spbuName) spbuName.value = tpl.spbuName || 'SPBU 64/6128';
+    if (spbuAddress) spbuAddress.value = tpl.address || 'JALAN SULTAN HASANUDIN';
+    if (spbuShift) spbuShift.value = tpl.shift || '1';
+    if (spbuNotrans) spbuNotrans.value = tpl.noTrans || '138762';
+    if (spbuTime) spbuTime.value = tpl.time || '12/10/2026 10:35:26';
+    if (spbuPompa) spbuPompa.value = tpl.pompa || '6';
+    if (spbuOperator) spbuOperator.value = tpl.operator || 'SALWA';
+    if (spbuFuel) spbuFuel.value = tpl.fuelType || 'PERTALITE';
+    if (spbuVolume) spbuVolume.value = String(tpl.volume || 3.00);
+    if (spbuPriceNon) spbuPriceNon.value = String(tpl.priceNonSubsidi || 18101);
+    if (spbuPriceSub) spbuPriceSub.value = String(tpl.priceSubsidi || 8101);
+    if (spbuPriceJual) spbuPriceJual.value = String(tpl.priceJual || 10000);
+    if (spbuPayMethod) spbuPayMethod.value = tpl.paymentMethod || 'CASH';
+    if (spbuPayAmount) spbuPayAmount.value = String(tpl.payAmount || 30000);
+
+    updateSpbuReceipt();
   } else {
-    AppState.currentLogoData = null;
-    logoImg.style.display = 'none';
+    if (retailPanel) retailPanel.style.display = 'block';
+    if (spbuPanel) spbuPanel.style.display = 'none';
+    if (retailView) retailView.style.display = 'block';
+    if (spbuView) spbuView.style.display = 'none';
+
+    document.getElementById('store-name').value = tpl.storeName;
+    document.getElementById('store-tagline').value = tpl.tagline || '';
+    document.getElementById('store-address').value = tpl.address;
+    document.getElementById('store-phone').value = tpl.phone;
+    document.getElementById('tx-no').value = tpl.txNo || generateTxId();
+    document.getElementById('tx-date').value = tpl.date || getNowDate();
+    document.getElementById('tx-time').value = tpl.time || getNowTime();
+    document.getElementById('tx-cashier').value = tpl.cashier;
+    document.getElementById('tx-sales').value = tpl.sales || '';
+    document.getElementById('tx-customer').value = tpl.customer || '';
+    document.getElementById('payment-method').value = tpl.paymentMethod || 'TUNAI';
+    document.getElementById('footer-note').value = tpl.footer;
+    document.getElementById('wifi-info').value = tpl.wifi || '';
+    document.getElementById('qr-text').value = tpl.qr || '';
+    document.getElementById('show-barcode').checked = !!tpl.showBarcode;
+    document.getElementById('show-qrcode').checked = !!tpl.showQrcode;
+    if (document.getElementById('calc-service-label')) {
+      document.getElementById('calc-service-label').value = tpl.serviceLabel || 'Layanan';
+    }
+    if (document.getElementById('calc-service')) {
+      document.getElementById('calc-service').value = tpl.serviceFee || 0;
+    }
+
+    const logoImg = document.getElementById('t-logo');
+    if (tpl.showLogo && tpl.logoUrl) {
+      AppState.currentLogoData = tpl.logoUrl;
+      logoImg.src = tpl.logoUrl;
+      logoImg.style.display = 'block';
+    } else {
+      AppState.currentLogoData = null;
+      logoImg.style.display = 'none';
+    }
+
+    renderItemRows();
+    updateCalculation();
+    renderCatalogModal();
   }
 
   document.querySelectorAll('.template-pill').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.template === tplKey);
   });
-
-  renderItemRows();
-  updateCalculation();
-  renderCatalogModal();
 }
 
 // Render dynamic items in form
@@ -599,6 +702,81 @@ function updateCalculation() {
   }
 }
 
+// SPBU Live Preview Engine & Calculation
+function updateSpbuReceipt() {
+  const spbuCode = document.getElementById('spbu-code')?.value.trim() || '6476128';
+  const spbuName = document.getElementById('spbu-name')?.value.trim() || 'SPBU 64/6128';
+  const spbuAddress = document.getElementById('spbu-address')?.value.trim() || 'JALAN SULTAN HASANUDIN';
+  const spbuShift = document.getElementById('spbu-shift')?.value.trim() || '1';
+  const spbuNotrans = document.getElementById('spbu-notrans')?.value.trim() || '138762';
+  const spbuTime = document.getElementById('spbu-time')?.value.trim() || '12/10/2026 10:35:26';
+  const spbuPompa = document.getElementById('spbu-pompa')?.value.trim() || '6';
+  const spbuOperator = document.getElementById('spbu-operator')?.value.trim() || 'SALWA';
+  const spbuFuel = document.getElementById('spbu-fuel')?.value || 'PERTALITE';
+  const volume = parseFloat(document.getElementById('spbu-volume')?.value) || 0;
+  const priceNon = parseFloat(document.getElementById('spbu-price-nonsubsidi')?.value) || 0;
+  const priceSub = parseFloat(document.getElementById('spbu-price-subsidi')?.value) || 0;
+  const priceJual = parseFloat(document.getElementById('spbu-price-jual')?.value) || 0;
+  const payMethod = document.getElementById('spbu-pay-method-input')?.value.trim() || 'CASH';
+  const payAmountInput = document.getElementById('spbu-pay-amount-input');
+
+  const totalNon = Math.round(volume * priceNon);
+  const totalDibayar = Math.round(volume * priceJual);
+  const totalSub = totalNon - totalDibayar;
+  const payAmount = payAmountInput ? (parseFloat(payAmountInput.value) || totalDibayar) : totalDibayar;
+
+  const elCode = document.getElementById('t-spbu-code');
+  const elName = document.getElementById('t-spbu-name');
+  const elAddress = document.getElementById('t-spbu-address');
+  const elShift = document.getElementById('t-spbu-shift');
+  const elNotrans = document.getElementById('t-spbu-notrans');
+  const elTime = document.getElementById('t-spbu-time');
+  const elPompa = document.getElementById('t-spbu-pompa');
+  const elOperator = document.getElementById('t-spbu-operator');
+  const elFuel = document.getElementById('t-spbu-fuel');
+  const elVolume = document.getElementById('t-spbu-volume');
+  const elPriceNon = document.getElementById('t-spbu-price-nonsubsidi');
+  const elPriceSub = document.getElementById('t-spbu-price-subsidi');
+  const elPriceJual = document.getElementById('t-spbu-price-jual');
+  const elTotNon = document.getElementById('t-spbu-tot-nonsubsidi');
+  const elTotSub = document.getElementById('t-spbu-tot-subsidi');
+  const elTotDibayar = document.getElementById('t-spbu-tot-dibayar');
+  const elPayMethod = document.getElementById('t-spbu-pay-method');
+  const elPayAmount = document.getElementById('t-spbu-pay-amount');
+  const elFootSub = document.getElementById('t-spbu-foot-subsidi');
+
+  if (elCode) elCode.textContent = spbuCode;
+  if (elName) elName.textContent = spbuName;
+  if (elAddress) elAddress.textContent = spbuAddress;
+  if (elShift) elShift.textContent = spbuShift;
+  if (elNotrans) elNotrans.textContent = spbuNotrans;
+  if (elTime) elTime.textContent = spbuTime;
+  if (elPompa) elPompa.textContent = spbuPompa;
+  if (elOperator) elOperator.textContent = spbuOperator;
+  if (elFuel) elFuel.textContent = spbuFuel;
+  if (elVolume) elVolume.textContent = `${volume.toFixed(2)} liter`;
+
+  if (elPriceNon) elPriceNon.textContent = formatRp(priceNon);
+  if (elPriceSub) elPriceSub.textContent = formatRp(priceSub);
+  if (elPriceJual) elPriceJual.textContent = formatRp(priceJual);
+
+  if (elTotNon) elTotNon.textContent = formatRp(totalNon);
+  if (elTotSub) elTotSub.textContent = formatRp(totalSub);
+  if (elTotDibayar) elTotDibayar.textContent = formatRp(totalDibayar);
+
+  if (elPayMethod) elPayMethod.textContent = payMethod;
+  if (elPayAmount) elPayAmount.textContent = formatRp(payAmount);
+
+  if (elFootSub) elFootSub.textContent = `Rp ${formatRp(totalSub)}`;
+
+  const calcNon = document.getElementById('spbu-calc-nonsubsidi');
+  const calcSub = document.getElementById('spbu-calc-subsidi');
+  const calcDibayar = document.getElementById('spbu-calc-dibayar');
+  if (calcNon) calcNon.textContent = `Rp ${formatRp(totalNon)}`;
+  if (calcSub) calcSub.textContent = `Rp ${formatRp(totalSub)}`;
+  if (calcDibayar) calcDibayar.textContent = `Rp ${formatRp(totalDibayar)}`;
+}
+
 // Bind all DOM events
 function bindEvents() {
   const allInputs = document.querySelectorAll('.form-column input, .form-column select, .form-column textarea');
@@ -606,6 +784,57 @@ function bindEvents() {
     input.addEventListener('input', updateCalculation);
     input.addEventListener('change', updateCalculation);
   });
+
+  // SPBU inputs listener
+  const spbuInputs = [
+    'spbu-code', 'spbu-name', 'spbu-address', 'spbu-shift', 'spbu-notrans', 'spbu-time',
+    'spbu-pompa', 'spbu-operator', 'spbu-fuel', 'spbu-volume',
+    'spbu-price-nonsubsidi', 'spbu-price-subsidi', 'spbu-price-jual',
+    'spbu-pay-method-input', 'spbu-pay-amount-input'
+  ];
+
+  spbuInputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', updateSpbuReceipt);
+      el.addEventListener('change', updateSpbuReceipt);
+    }
+  });
+
+  const fuelSelect = document.getElementById('spbu-fuel');
+  if (fuelSelect) {
+    fuelSelect.addEventListener('change', () => {
+      const fuel = fuelSelect.value;
+      const prices = FUEL_PRICES[fuel];
+      if (prices) {
+        const pNon = document.getElementById('spbu-price-nonsubsidi');
+        const pSub = document.getElementById('spbu-price-subsidi');
+        const pJual = document.getElementById('spbu-price-jual');
+        if (pNon) pNon.value = String(prices.non);
+        if (pSub) pSub.value = String(prices.sub);
+        if (pJual) pJual.value = String(prices.jual);
+
+        const vInput = document.getElementById('spbu-volume');
+        const vol = parseFloat(vInput?.value) || 0;
+        const pInput = document.getElementById('spbu-pay-amount-input');
+        if (pInput) pInput.value = String(Math.round(vol * prices.jual));
+
+        updateSpbuReceipt();
+      }
+    });
+  }
+
+  const volInput = document.getElementById('spbu-volume');
+  if (volInput) {
+    volInput.addEventListener('input', () => {
+      const vol = parseFloat(volInput.value) || 0;
+      const priceJual = parseFloat(document.getElementById('spbu-price-jual')?.value) || 0;
+      const totalDibayar = Math.round(vol * priceJual);
+      const payInput = document.getElementById('spbu-pay-amount-input');
+      if (payInput) payInput.value = String(totalDibayar);
+      updateSpbuReceipt();
+    });
+  }
 
   // Template switch
   document.querySelectorAll('.template-pill').forEach(pill => {

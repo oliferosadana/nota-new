@@ -20,6 +20,7 @@ export const prerender = false;
         <label style="margin-bottom: 8px; display: block; font-weight: 600; font-size: 0.85rem;">⚡ Pilih Template Usaha:</label>
         <div class="template-pills">
           <button type="button" class="template-pill active" data-template="benthenk">🖥️ Benthenk Komputer</button>
+          <button type="button" class="template-pill" data-template="spbu">⛽ SPBU Pertamina</button>
           <button type="button" class="template-pill" data-template="cafe">☕ Cafe & Coffee</button>
           <button type="button" class="template-pill" data-template="resto">🍰 Kuliner & Resto</button>
           <button type="button" class="template-pill" data-template="retail">🛒 Minimarket / Retail</button>
@@ -28,10 +29,12 @@ export const prerender = false;
         </div>
       </div>
 
-      <!-- Store & Receipt Info -->
-      <div class="panel-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
-          <h2 class="panel-card-title" style="margin-bottom: 0; padding-bottom: 0; border: none;">
+      <!-- RETAIL STORE FORM PANELS -->
+      <div id="retail-editor-panel">
+        <!-- Store & Receipt Info -->
+        <div class="panel-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+            <h2 class="panel-card-title" style="margin-bottom: 0; padding-bottom: 0; border: none;">
             <span aria-hidden="true">🏪</span> Informasi Toko & Outlet
             <span class="badge">Database</span>
           </h2>
@@ -202,6 +205,123 @@ export const prerender = false;
           </div>
         </div>
       </div>
+      <!-- END RETAIL STORE FORM PANELS -->
+
+      <!-- SPBU PERTAMINA FORM PANEL -->
+      <div id="spbu-editor-panel" style="display: none;">
+        <!-- SPBU Info Card -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">
+            <span aria-hidden="true">⛽</span> Informasi SPBU Pertamina
+          </h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="spbu-code">Kode SPBU (Baris 1)</label>
+              <input type="text" id="spbu-code" value="6476128" placeholder="6476128" />
+            </div>
+            <div class="form-group">
+              <label for="spbu-name">Nama SPBU (Baris 2)</label>
+              <input type="text" id="spbu-name" value="SPBU 64/6128" placeholder="SPBU 64/6128" />
+            </div>
+            <div class="form-group col-span-2">
+              <label for="spbu-address">Alamat SPBU (Baris 3)</label>
+              <input type="text" id="spbu-address" value="JALAN SULTAN HASANUDIN" placeholder="Alamat SPBU..." />
+            </div>
+            <div class="form-group">
+              <label for="spbu-shift">Shift</label>
+              <input type="text" id="spbu-shift" value="1" placeholder="1" />
+            </div>
+            <div class="form-group">
+              <label for="spbu-notrans">No. Transaksi</label>
+              <input type="text" id="spbu-notrans" value="138762" placeholder="138762" />
+            </div>
+            <div class="form-group col-span-2">
+              <label for="spbu-time">Waktu Transaksi (DD/MM/YYYY HH:MM:SS)</label>
+              <input type="text" id="spbu-time" value="12/10/2026 10:35:26" placeholder="12/10/2026 10:35:26" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Pengisian BBM Card -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">
+            <span aria-hidden="true">🛢️</span> Pengisian & Jenis BBM
+          </h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="spbu-pompa">Pulau / Pompa</label>
+              <input type="text" id="spbu-pompa" value="6" placeholder="6" />
+            </div>
+            <div class="form-group">
+              <label for="spbu-operator">Operator</label>
+              <input type="text" id="spbu-operator" value="SALWA" placeholder="SALWA" />
+            </div>
+            <div class="form-group">
+              <label for="spbu-fuel">Jenis BBM</label>
+              <select id="spbu-fuel">
+                <option value="PERTALITE" selected>PERTALITE (Subsidi)</option>
+                <option value="SOLAR">BIO SOLAR (Subsidi)</option>
+                <option value="PERTAMAX">PERTAMAX</option>
+                <option value="PERTAMAX TURBO">PERTAMAX TURBO</option>
+                <option value="DEXLITE">DEXLITE</option>
+                <option value="PERTAMINA DEX">PERTAMINA DEX</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="spbu-volume">Volume (Liter)</label>
+              <input type="number" id="spbu-volume" step="0.01" value="3.00" min="0.01" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Harga & Subsidi Card -->
+        <div class="panel-card">
+          <h2 class="panel-card-title">
+            <span aria-hidden="true">💰</span> Harga & Subsidi (Rp/Liter)
+          </h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="spbu-price-nonsubsidi">Harga Non Subsidi (Rp/L)</label>
+              <input type="number" id="spbu-price-nonsubsidi" value="18101" />
+            </div>
+            <div class="form-group">
+              <label for="spbu-price-subsidi">Subsidi Pemerintah (Rp/L)</label>
+              <input type="number" id="spbu-price-subsidi" value="8101" />
+            </div>
+            <div class="form-group col-span-2">
+              <label for="spbu-price-jual">Harga Jual Konsumen (Rp/L)</label>
+              <input type="number" id="spbu-price-jual" value="10000" />
+            </div>
+          </div>
+
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);" class="form-grid">
+            <div class="form-group">
+              <label for="spbu-pay-method-input">Metode Bayar</label>
+              <input type="text" id="spbu-pay-method-input" value="CASH" placeholder="CASH / QRIS" />
+            </div>
+            <div class="form-group">
+              <label for="spbu-pay-amount-input">Nominal Bayar (Rp)</label>
+              <input type="number" id="spbu-pay-amount-input" value="30000" />
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 12px;">
+            <div class="summary-row">
+              <span>Total Tanpa Subsidi:</span>
+              <strong id="spbu-calc-nonsubsidi">Rp 54.303</strong>
+            </div>
+            <div class="summary-row">
+              <span>Total Subsidi Pemerintah:</span>
+              <strong id="spbu-calc-subsidi" style="color: #34d399;">Rp 24.303</strong>
+            </div>
+            <div class="summary-row total">
+              <span>Dibayar Konsumen:</span>
+              <span id="spbu-calc-dibayar">Rp 30.000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END SPBU PERTAMINA FORM PANEL -->
 
     </div>
 
@@ -232,72 +352,196 @@ export const prerender = false;
         <div class="thermal-paper-wrap width-58mm" id="receipt-wrap">
           <div class="thermal-paper" id="receipt-paper">
 
-            <!-- Store Header -->
-            <div class="t-header">
-              <img id="t-logo" class="t-logo-img" src="/img/ben.jpeg" alt="Logo Benthenk" />
-              <div class="t-title" id="t-store-name">UD BENTHENK KOMPUTER</div>
-              <div class="t-subtitle" id="t-store-tagline" style="display: none;"></div>
-              <div class="t-address" id="t-store-address">Komp Balikpapan Baru Blok C No.6</div>
-              <div class="t-address" id="t-store-phone">Telp: 085251822145 | 087886935070</div>
+            <!-- RETAIL RECEIPT VIEW -->
+            <div id="receipt-retail-view">
+              <!-- Store Header -->
+              <div class="t-header">
+                <img id="t-logo" class="t-logo-img" src="/img/ben.jpeg" alt="Logo Benthenk" />
+                <div class="t-title" id="t-store-name">UD BENTHENK KOMPUTER</div>
+                <div class="t-subtitle" id="t-store-tagline" style="display: none;"></div>
+                <div class="t-address" id="t-store-address">Komp Balikpapan Baru Blok C No.6</div>
+                <div class="t-address" id="t-store-phone">Telp: 085251822145 | 087886935070</div>
+              </div>
+
+              <div class="t-divider"></div>
+
+              <!-- Transaction Meta -->
+              <div class="t-meta">
+                <div class="t-meta-grid">
+                  <span><span id="t-tx-no">INV/2026/10/0158</span></span>
+                  <span></span>
+                </div>
+                <div class="t-meta-grid">
+                  <span id="t-tx-date">2026-10-13</span>
+                  <span id="t-tx-cashier-row">Kasir: <span id="t-tx-cashier">pagi</span></span>
+                </div>
+                <div class="t-meta-grid">
+                  <span id="t-tx-time">11:05</span>
+                  <span id="t-tx-sales-row">Sales: <span id="t-tx-sales">wiwik</span></span>
+                </div>
+                <div class="t-meta-grid" id="t-customer-row" style="display: none;">
+                  <span>Pelanggan:</span>
+                  <span id="t-tx-customer"></span>
+                </div>
+              </div>
+
+              <div class="t-divider"></div>
+
+              <!-- Item List -->
+              <div class="t-items-list" id="t-items-container">
+                <!-- Rendered dynamically -->
+              </div>
+
+              <div class="t-divider"></div>
+
+              <!-- Summary Calculations -->
+              <div class="t-summary" id="t-summary-box">
+                <div class="t-summary-row" id="t-row-subtotal">
+                  <span>Subtotal</span>
+                  <span id="t-sum-subtotal">900.000</span>
+                </div>
+                <div class="t-summary-row bold" id="t-row-total">
+                  <span>TOTAL</span>
+                  <span id="t-sum-grandtotal">900.000</span>
+                </div>
+                <div class="t-divider" id="t-divider-payment"></div>
+                <div class="t-summary-row" id="t-row-pay">
+                  <span id="t-pay-method">QRIS</span>
+                  <span id="t-pay-amount">900.000</span>
+                </div>
+              </div>
+
+              <div class="t-divider"></div>
+
+              <!-- Footer Notes & Barcode/QR -->
+              <div class="t-footer">
+                <div id="t-footer-text" class="t-footer-lines">Barang yang sudah dibeli tidak dapat ditukar&#10;atau dikembalikan&#10;Terima Kasih&#10;WA Admin : 085251822145</div>
+                <div id="t-wifi-text" style="display: none; margin-top: 6px; font-size: 10.5px;"></div>
+                <div class="t-barcode-wrap" id="t-barcode-container" style="display: none;"></div>
+                <div class="t-qrcode-wrap" id="t-qrcode-container" style="display: none;"></div>
+              </div>
             </div>
+            <!-- END RETAIL RECEIPT VIEW -->
 
-            <div class="t-divider"></div>
+            <!-- SPBU PERTAMINA RECEIPT VIEW -->
+            <div id="receipt-spbu-view" class="spbu-receipt" style="display: none;">
+              <!-- Pertamina Logo SVG -->
+              <div class="spbu-logo-wrap">
+                <svg class="spbu-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 34" width="145" height="28">
+                  <g fill="#000">
+                    <polygon points="12,3 29,3 21,13 4,13" />
+                    <polygon points="4,16 21,16 13,26 -4,26" transform="translate(3,0)" />
+                    <path d="M29,3 L36,3 C43,3 47,6.5 47,12.5 C47,18.5 43,22 36,22 L22,22 L28,13 L35,13 C36.5,13 37.5,12 37.5,10.5 C37.5,9 36.5,8 35,8 L26,8 Z" />
+                  </g>
+                  <text x="54" y="20.5" font-family="'Arial Black', 'Roboto Condensed', Arial, sans-serif" font-weight="900" font-size="16.5" letter-spacing="0.8" fill="#000">PERTAMINA</text>
+                </svg>
+              </div>
 
-            <!-- Transaction Meta -->
-            <div class="t-meta">
-              <div class="t-meta-grid">
-                <span><span id="t-tx-no">INV/2026/10/0158</span></span>
-                <span></span>
+              <div class="spbu-header-center">
+                <div class="spbu-code" id="t-spbu-code">6476128</div>
+                <div class="spbu-name" id="t-spbu-name">SPBU 64/6128</div>
+                <div class="spbu-address" id="t-spbu-address">JALAN SULTAN HASANUDIN</div>
               </div>
-              <div class="t-meta-grid">
-                <span id="t-tx-date">2026-10-13</span>
-                <span id="t-tx-cashier-row">Kasir: <span id="t-tx-cashier">pagi</span></span>
+
+              <div class="spbu-meta">
+                <div class="spbu-row-between">
+                  <span>Shift: <span id="t-spbu-shift">1</span></span>
+                  <span>No. Trans: <span id="t-spbu-notrans">138762</span></span>
+                </div>
+                <div class="spbu-row-between">
+                  <span>Waktu: <span id="t-spbu-time">12/10/2026 10:35:26</span></span>
+                  <span></span>
+                </div>
               </div>
-              <div class="t-meta-grid">
-                <span id="t-tx-time">11:05</span>
-                <span id="t-tx-sales-row">Sales: <span id="t-tx-sales">wiwik</span></span>
+
+              <div class="spbu-divider"></div>
+
+              <!-- Pengisian Section -->
+              <div class="spbu-section">
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Pulau/Pompa</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val" id="t-spbu-pompa">6</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Operator</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val" id="t-spbu-operator">SALWA</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Jenis BBM</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val" id="t-spbu-fuel">PERTALITE</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Volume</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val" id="t-spbu-volume">3.00 liter</span>
+                </div>
               </div>
-              <div class="t-meta-grid" id="t-customer-row" style="display: none;">
-                <span>Pelanggan:</span>
-                <span id="t-tx-customer"></span>
+
+              <div class="spbu-divider"></div>
+
+              <!-- Informasi Harga BBM Section -->
+              <div class="spbu-section">
+                <div class="spbu-section-title">Informasi Harga BBM (Rp/Liter)</div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Harga Non Subsidi</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val-num" id="t-spbu-price-nonsubsidi">18.101</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Subsidi Pemerintah</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val-num" id="t-spbu-price-subsidi">8.101</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Harga Jual</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val-num" id="t-spbu-price-jual">10.000</span>
+                </div>
+              </div>
+
+              <!-- Total Penjualan Section -->
+              <div class="spbu-section" style="margin-top: 6px;">
+                <div class="spbu-section-title">Total Penjualan (Rp)</div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Tanpa Subsidi</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val-num" id="t-spbu-tot-nonsubsidi">54.303</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Subsidi Pemerintah</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val-num" id="t-spbu-tot-subsidi">24.303</span>
+                </div>
+                <div class="spbu-col-row">
+                  <span class="spbu-label">Dibayar Konsumen</span>
+                  <span class="spbu-sep">:</span>
+                  <span class="spbu-val-num" id="t-spbu-tot-dibayar">30.000</span>
+                </div>
+              </div>
+
+              <div class="spbu-divider"></div>
+
+              <!-- Payment Section -->
+              <div class="spbu-pay-section">
+                <div class="spbu-pay-method" id="t-spbu-pay-method">CASH</div>
+                <div class="spbu-pay-amount" id="t-spbu-pay-amount">30.000</div>
+              </div>
+
+              <div class="spbu-divider"></div>
+
+              <!-- Footer Section -->
+              <div class="spbu-footer" id="t-spbu-footer">
+                Anda mendapat subsidi dari<br>
+                Pemerintah sebesar <span id="t-spbu-foot-subsidi">Rp 24,303</span><br>
+                (Perhitungan Subsidi Unaudited<br>
+                atau Estimasi). Gunakan BBM<br>
+                Subsidi secara bijak.
               </div>
             </div>
-
-            <div class="t-divider"></div>
-
-            <!-- Item List -->
-            <div class="t-items-list" id="t-items-container">
-              <!-- Rendered dynamically -->
-            </div>
-
-            <div class="t-divider"></div>
-
-            <!-- Summary Calculations -->
-            <div class="t-summary" id="t-summary-box">
-              <div class="t-summary-row" id="t-row-subtotal">
-                <span>Subtotal</span>
-                <span id="t-sum-subtotal">900.000</span>
-              </div>
-              <div class="t-summary-row bold" id="t-row-total">
-                <span>TOTAL</span>
-                <span id="t-sum-grandtotal">900.000</span>
-              </div>
-              <div class="t-divider" id="t-divider-payment"></div>
-              <div class="t-summary-row" id="t-row-pay">
-                <span id="t-pay-method">QRIS</span>
-                <span id="t-pay-amount">900.000</span>
-              </div>
-            </div>
-
-            <div class="t-divider"></div>
-
-            <!-- Footer Notes & Barcode/QR -->
-            <div class="t-footer">
-              <div id="t-footer-text" class="t-footer-lines">Barang yang sudah dibeli tidak dapat ditukar&#10;atau dikembalikan&#10;Terima Kasih&#10;WA Admin : 085251822145</div>
-              <div id="t-wifi-text" style="display: none; margin-top: 6px; font-size: 10.5px;"></div>
-              <div class="t-barcode-wrap" id="t-barcode-container" style="display: none;"></div>
-              <div class="t-qrcode-wrap" id="t-qrcode-container" style="display: none;"></div>
-            </div>
+            <!-- END SPBU PERTAMINA RECEIPT VIEW -->
 
           </div>
           <div class="thermal-paper-bottom"></div>

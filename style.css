@@ -658,6 +658,141 @@ input::placeholder, textarea::placeholder {
   max-width: 100%;
 }
 
+/* =========================================================
+   SPBU PERTAMINA RECEIPT TEMPLATE STYLING
+   ========================================================= */
+.spbu-receipt {
+  font-family: 'Roboto Condensed', Arial, sans-serif;
+  color: #000;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.spbu-logo-wrap {
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.spbu-logo-svg {
+  display: block;
+  margin: 0 auto 3px auto;
+  max-width: 145px;
+  height: auto;
+}
+
+.spbu-header-center {
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.spbu-code {
+  font-size: 13.5px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.spbu-name {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.spbu-address {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.spbu-meta {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.spbu-row-between {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  margin-bottom: 1px;
+}
+
+.spbu-divider {
+  border-top: 1px dotted rgba(0, 0, 0, 0.75);
+  margin: 4px 0;
+  width: 100%;
+}
+
+.spbu-section {
+  font-size: 12px;
+  font-weight: 700;
+  margin: 2px 0;
+}
+
+.spbu-section-title {
+  font-weight: 700;
+  font-size: 12.5px;
+  margin-bottom: 2px;
+}
+
+.spbu-col-row {
+  display: flex !important;
+  align-items: baseline !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  margin-bottom: 1.5px;
+}
+
+.spbu-label {
+  width: 125px;
+  flex-shrink: 0;
+}
+
+.thermal-paper-wrap.width-80mm .spbu-label {
+  width: 160px;
+}
+
+.spbu-sep {
+  width: 12px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+.spbu-val {
+  flex-grow: 1;
+}
+
+.spbu-val-num {
+  flex-grow: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.spbu-pay-section {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 3px 0;
+}
+
+.spbu-pay-method {
+  font-weight: 700;
+}
+
+.spbu-pay-amount {
+  text-align: right;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.spbu-footer {
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 4px;
+}
+
 /* Quick Action Bottom Bar for Print Execution */
 .preview-actions {
   margin-top: 12px;
@@ -1088,4 +1223,34 @@ input::placeholder, textarea::placeholder {
     white-space: pre-line !important;
     line-height: 1.25 !important;
   }
+
+  /* SPBU Print Rules */
+  .spbu-receipt {
+    width: 100% !important;
+    font-family: 'Roboto Condensed', Arial, sans-serif !important;
+    font-weight: 700 !important;
+    color: #000 !important;
+  }
+
+  .spbu-divider {
+    border-top: 1px dotted #000 !important;
+    margin: 2mm 0 !important;
+    width: 100% !important;
+  }
+
+  body.print-80mm .spbu-code { font-size: 10.5pt !important; }
+  body.print-80mm .spbu-name { font-size: 10pt !important; }
+  body.print-80mm .spbu-address,
+  body.print-80mm .spbu-meta,
+  body.print-80mm .spbu-section { font-size: 9.5pt !important; }
+  body.print-80mm .spbu-label { width: 38mm !important; }
+  body.print-80mm .spbu-footer { font-size: 9pt !important; }
+
+  body.print-58mm .spbu-code { font-size: 9pt !important; }
+  body.print-58mm .spbu-name { font-size: 8.5pt !important; }
+  body.print-58mm .spbu-address,
+  body.print-58mm .spbu-meta,
+  body.print-58mm .spbu-section { font-size: 8pt !important; }
+  body.print-58mm .spbu-label { width: 28mm !important; }
+  body.print-58mm .spbu-footer { font-size: 7.5pt !important; }
 }

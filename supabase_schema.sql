@@ -116,9 +116,9 @@ values (
   '',
   false,
   false,
-  '[{"name": "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", "qty": 1, "unit": "pcs", "price": 249000}]'::jsonb,
+  '[{"name": "CONVERTER JETE X10 ADAPTER ETHERNET HUB 2IN1 USB TO LANADAPTER ETHERNET CONV...", "qty": 1, "unit": "pcs", "price": 249000}]'::jsonb,
   '[
-    {"name": "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", "unit": "pcs", "price": 249000},
+    {"name": "CONVERTER JETE X10 ADAPTER ETHERNET HUB 2IN1 USB TO LANADAPTER ETHERNET CONV...", "unit": "pcs", "price": 249000},
     {"name": "SSD NVMe 512GB PCIe Gen3", "unit": "pcs", "price": 420000},
     {"name": "SSD SATA 2.5 256GB", "unit": "pcs", "price": 235000},
     {"name": "RAM DDR4 8GB 3200MHz", "unit": "pcs", "price": 280000},

@@ -27,7 +27,59 @@ export const BENTHENK_LOGO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www
 </svg>`;
 
 // Preset Templates
+export const FUEL_PRICES: Record<string, { non: number, sub: number, jual: number }> = {
+  PERTALITE: { non: 18101, sub: 8101, jual: 10000 },
+  SOLAR: { non: 15500, sub: 8700, jual: 6800 },
+  PERTAMAX: { non: 12100, sub: 0, jual: 12100 },
+  "PERTAMAX TURBO": { non: 13250, sub: 0, jual: 13250 },
+  DEXLITE: { non: 13050, sub: 0, jual: 13050 },
+  "PERTAMINA DEX": { non: 13400, sub: 0, jual: 13400 }
+};
+
 export const PRESETS: Record<string, any> = {
+  spbu: {
+    spbuCode: "6476128",
+    spbuName: "SPBU 64/6128",
+    address: "JALAN SULTAN HASANUDIN",
+    shift: "1",
+    noTrans: "138762",
+    time: "12/10/2026 10:35:26",
+    pompa: "6",
+    operator: "SALWA",
+    fuelType: "PERTALITE",
+    volume: 3.00,
+    priceNonSubsidi: 18101,
+    priceSubsidi: 8101,
+    priceJual: 10000,
+    paymentMethod: "CASH",
+    payAmount: 30000,
+    storeName: "SPBU 64/6128 PERTAMINA",
+    tagline: "",
+    phone: "",
+    txNo: "138762",
+    date: "2026-10-12",
+    cashier: "SALWA",
+    sales: "1",
+    customer: "",
+    footer: "Anda mendapat subsidi dari\nPemerintah sebesar Rp 24,303\n(Perhitungan Subsidi Unaudited\natau Estimasi). Gunakan BBM\nSubsidi secara bijak.",
+    wifi: "",
+    qr: "",
+    showLogo: true,
+    logoUrl: null,
+    showBarcode: false,
+    showQrcode: false,
+    items: [
+      { name: "PERTALITE (3.00 Liter)", qty: 3, unit: "liter", price: 10000 }
+    ],
+    catalog: [
+      { name: "PERTALITE", unit: "liter", price: 10000 },
+      { name: "BIO SOLAR", unit: "liter", price: 6800 },
+      { name: "PERTAMAX", unit: "liter", price: 12100 },
+      { name: "PERTAMAX TURBO", unit: "liter", price: 13250 },
+      { name: "DEXLITE", unit: "liter", price: 13050 },
+      { name: "PERTAMINA DEX", unit: "liter", price: 13400 }
+    ]
+  },
   benthenk: {
     storeName: "UD BENTHENK KOMPUTER",
     tagline: "",
@@ -49,10 +101,10 @@ export const PRESETS: Record<string, any> = {
     showBarcode: false,
     showQrcode: false,
     items: [
-      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 249000 }
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET HUB 2IN1 USB TO LANADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 249000 }
     ],
     catalog: [
-      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", unit: "pcs", price: 249000 },
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET HUB 2IN1 USB TO LANADAPTER ETHERNET CONV...", unit: "pcs", price: 249000 },
       { name: "SSD NVMe 512GB PCIe Gen3", unit: "pcs", price: 420000 },
       { name: "SSD SATA 2.5 256GB", unit: "pcs", price: 235000 },
       { name: "RAM DDR4 8GB 3200MHz", unit: "pcs", price: 280000 },
@@ -521,6 +573,80 @@ export function renderFormItems() {
   });
 }
 
+export function updateSpbuReceipt() {
+  const spbuCode = (document.getElementById('spbu-code') as HTMLInputElement)?.value.trim() || '6476128';
+  const spbuName = (document.getElementById('spbu-name') as HTMLInputElement)?.value.trim() || 'SPBU 64/6128';
+  const spbuAddress = (document.getElementById('spbu-address') as HTMLInputElement)?.value.trim() || 'JALAN SULTAN HASANUDIN';
+  const spbuShift = (document.getElementById('spbu-shift') as HTMLInputElement)?.value.trim() || '1';
+  const spbuNotrans = (document.getElementById('spbu-notrans') as HTMLInputElement)?.value.trim() || '138762';
+  const spbuTime = (document.getElementById('spbu-time') as HTMLInputElement)?.value.trim() || '12/10/2026 10:35:26';
+  const spbuPompa = (document.getElementById('spbu-pompa') as HTMLInputElement)?.value.trim() || '6';
+  const spbuOperator = (document.getElementById('spbu-operator') as HTMLInputElement)?.value.trim() || 'SALWA';
+  const spbuFuel = (document.getElementById('spbu-fuel') as HTMLSelectElement)?.value || 'PERTALITE';
+  const volume = parseFloat((document.getElementById('spbu-volume') as HTMLInputElement)?.value) || 0;
+  const priceNon = parseFloat((document.getElementById('spbu-price-nonsubsidi') as HTMLInputElement)?.value) || 0;
+  const priceSub = parseFloat((document.getElementById('spbu-price-subsidi') as HTMLInputElement)?.value) || 0;
+  const priceJual = parseFloat((document.getElementById('spbu-price-jual') as HTMLInputElement)?.value) || 0;
+  const payMethod = (document.getElementById('spbu-pay-method-input') as HTMLInputElement)?.value.trim() || 'CASH';
+  const payAmountInput = document.getElementById('spbu-pay-amount-input') as HTMLInputElement;
+
+  const totalNon = Math.round(volume * priceNon);
+  const totalDibayar = Math.round(volume * priceJual);
+  const totalSub = totalNon - totalDibayar;
+  const payAmount = payAmountInput ? (parseFloat(payAmountInput.value) || totalDibayar) : totalDibayar;
+
+  const elCode = document.getElementById('t-spbu-code');
+  const elName = document.getElementById('t-spbu-name');
+  const elAddress = document.getElementById('t-spbu-address');
+  const elShift = document.getElementById('t-spbu-shift');
+  const elNotrans = document.getElementById('t-spbu-notrans');
+  const elTime = document.getElementById('t-spbu-time');
+  const elPompa = document.getElementById('t-spbu-pompa');
+  const elOperator = document.getElementById('t-spbu-operator');
+  const elFuel = document.getElementById('t-spbu-fuel');
+  const elVolume = document.getElementById('t-spbu-volume');
+  const elPriceNon = document.getElementById('t-spbu-price-nonsubsidi');
+  const elPriceSub = document.getElementById('t-spbu-price-subsidi');
+  const elPriceJual = document.getElementById('t-spbu-price-jual');
+  const elTotNon = document.getElementById('t-spbu-tot-nonsubsidi');
+  const elTotSub = document.getElementById('t-spbu-tot-subsidi');
+  const elTotDibayar = document.getElementById('t-spbu-tot-dibayar');
+  const elPayMethod = document.getElementById('t-spbu-pay-method');
+  const elPayAmount = document.getElementById('t-spbu-pay-amount');
+  const elFootSub = document.getElementById('t-spbu-foot-subsidi');
+
+  if (elCode) elCode.textContent = spbuCode;
+  if (elName) elName.textContent = spbuName;
+  if (elAddress) elAddress.textContent = spbuAddress;
+  if (elShift) elShift.textContent = spbuShift;
+  if (elNotrans) elNotrans.textContent = spbuNotrans;
+  if (elTime) elTime.textContent = spbuTime;
+  if (elPompa) elPompa.textContent = spbuPompa;
+  if (elOperator) elOperator.textContent = spbuOperator;
+  if (elFuel) elFuel.textContent = spbuFuel;
+  if (elVolume) elVolume.textContent = `${volume.toFixed(2)} liter`;
+
+  if (elPriceNon) elPriceNon.textContent = formatRp(priceNon);
+  if (elPriceSub) elPriceSub.textContent = formatRp(priceSub);
+  if (elPriceJual) elPriceJual.textContent = formatRp(priceJual);
+
+  if (elTotNon) elTotNon.textContent = formatRp(totalNon);
+  if (elTotSub) elTotSub.textContent = formatRp(totalSub);
+  if (elTotDibayar) elTotDibayar.textContent = formatRp(totalDibayar);
+
+  if (elPayMethod) elPayMethod.textContent = payMethod;
+  if (elPayAmount) elPayAmount.textContent = formatRp(payAmount);
+
+  if (elFootSub) elFootSub.textContent = `Rp ${formatRp(totalSub)}`;
+
+  const calcNon = document.getElementById('spbu-calc-nonsubsidi');
+  const calcSub = document.getElementById('spbu-calc-subsidi');
+  const calcDibayar = document.getElementById('spbu-calc-dibayar');
+  if (calcNon) calcNon.textContent = `Rp ${formatRp(totalNon)}`;
+  if (calcSub) calcSub.textContent = `Rp ${formatRp(totalSub)}`;
+  if (calcDibayar) calcDibayar.textContent = `Rp ${formatRp(totalDibayar)}`;
+}
+
 export function loadTemplate(templateKey: string) {
   const preset = PRESETS[templateKey];
   if (!preset) return;
@@ -529,23 +655,78 @@ export function loadTemplate(templateKey: string) {
   state.uploadedLogo = null;
   state.items = JSON.parse(JSON.stringify(preset.items));
 
-  (document.getElementById('store-name') as HTMLInputElement).value = preset.storeName;
-  (document.getElementById('store-tagline') as HTMLInputElement).value = preset.tagline;
-  (document.getElementById('store-address') as HTMLInputElement).value = preset.address;
-  (document.getElementById('store-phone') as HTMLInputElement).value = preset.phone;
-  (document.getElementById('tx-no') as HTMLInputElement).value = preset.txNo;
-  (document.getElementById('tx-date') as HTMLInputElement).value = preset.date;
-  (document.getElementById('tx-time') as HTMLInputElement).value = preset.time;
-  (document.getElementById('tx-cashier') as HTMLInputElement).value = preset.cashier;
-  (document.getElementById('tx-sales') as HTMLInputElement).value = preset.sales;
-  (document.getElementById('tx-customer') as HTMLInputElement).value = preset.customer;
-  (document.getElementById('payment-method') as HTMLSelectElement).value = preset.paymentMethod;
-  (document.getElementById('pay-amount') as HTMLInputElement).value = preset.payAmount;
-  (document.getElementById('footer-note') as HTMLTextAreaElement).value = preset.footer;
-  (document.getElementById('wifi-info') as HTMLInputElement).value = preset.wifi;
-  (document.getElementById('qr-text') as HTMLInputElement).value = preset.qr;
-  (document.getElementById('show-barcode') as HTMLInputElement).checked = preset.showBarcode;
-  (document.getElementById('show-qrcode') as HTMLInputElement).checked = preset.showQrcode;
+  const retailPanel = document.getElementById('retail-editor-panel');
+  const spbuPanel = document.getElementById('spbu-editor-panel');
+  const retailView = document.getElementById('receipt-retail-view');
+  const spbuView = document.getElementById('receipt-spbu-view');
+
+  if (templateKey === 'spbu') {
+    if (retailPanel) retailPanel.style.display = 'none';
+    if (spbuPanel) spbuPanel.style.display = 'block';
+    if (retailView) retailView.style.display = 'none';
+    if (spbuView) spbuView.style.display = 'block';
+
+    const spbuCode = document.getElementById('spbu-code') as HTMLInputElement;
+    const spbuName = document.getElementById('spbu-name') as HTMLInputElement;
+    const spbuAddress = document.getElementById('spbu-address') as HTMLInputElement;
+    const spbuShift = document.getElementById('spbu-shift') as HTMLInputElement;
+    const spbuNotrans = document.getElementById('spbu-notrans') as HTMLInputElement;
+    const spbuTime = document.getElementById('spbu-time') as HTMLInputElement;
+    const spbuPompa = document.getElementById('spbu-pompa') as HTMLInputElement;
+    const spbuOperator = document.getElementById('spbu-operator') as HTMLInputElement;
+    const spbuFuel = document.getElementById('spbu-fuel') as HTMLSelectElement;
+    const spbuVolume = document.getElementById('spbu-volume') as HTMLInputElement;
+    const spbuPriceNon = document.getElementById('spbu-price-nonsubsidi') as HTMLInputElement;
+    const spbuPriceSub = document.getElementById('spbu-price-subsidi') as HTMLInputElement;
+    const spbuPriceJual = document.getElementById('spbu-price-jual') as HTMLInputElement;
+    const spbuPayMethod = document.getElementById('spbu-pay-method-input') as HTMLInputElement;
+    const spbuPayAmount = document.getElementById('spbu-pay-amount-input') as HTMLInputElement;
+
+    if (spbuCode) spbuCode.value = preset.spbuCode || '6476128';
+    if (spbuName) spbuName.value = preset.spbuName || 'SPBU 64/6128';
+    if (spbuAddress) spbuAddress.value = preset.address || 'JALAN SULTAN HASANUDIN';
+    if (spbuShift) spbuShift.value = preset.shift || '1';
+    if (spbuNotrans) spbuNotrans.value = preset.noTrans || '138762';
+    if (spbuTime) spbuTime.value = preset.time || '12/10/2026 10:35:26';
+    if (spbuPompa) spbuPompa.value = preset.pompa || '6';
+    if (spbuOperator) spbuOperator.value = preset.operator || 'SALWA';
+    if (spbuFuel) spbuFuel.value = preset.fuelType || 'PERTALITE';
+    if (spbuVolume) spbuVolume.value = String(preset.volume || 3.00);
+    if (spbuPriceNon) spbuPriceNon.value = String(preset.priceNonSubsidi || 18101);
+    if (spbuPriceSub) spbuPriceSub.value = String(preset.priceSubsidi || 8101);
+    if (spbuPriceJual) spbuPriceJual.value = String(preset.priceJual || 10000);
+    if (spbuPayMethod) spbuPayMethod.value = preset.paymentMethod || 'CASH';
+    if (spbuPayAmount) spbuPayAmount.value = String(preset.payAmount || 30000);
+
+    updateSpbuReceipt();
+  } else {
+    if (retailPanel) retailPanel.style.display = 'block';
+    if (spbuPanel) spbuPanel.style.display = 'none';
+    if (retailView) retailView.style.display = 'block';
+    if (spbuView) spbuView.style.display = 'none';
+
+    (document.getElementById('store-name') as HTMLInputElement).value = preset.storeName;
+    (document.getElementById('store-tagline') as HTMLInputElement).value = preset.tagline;
+    (document.getElementById('store-address') as HTMLInputElement).value = preset.address;
+    (document.getElementById('store-phone') as HTMLInputElement).value = preset.phone;
+    (document.getElementById('tx-no') as HTMLInputElement).value = preset.txNo;
+    (document.getElementById('tx-date') as HTMLInputElement).value = preset.date;
+    (document.getElementById('tx-time') as HTMLInputElement).value = preset.time;
+    (document.getElementById('tx-cashier') as HTMLInputElement).value = preset.cashier;
+    (document.getElementById('tx-sales') as HTMLInputElement).value = preset.sales;
+    (document.getElementById('tx-customer') as HTMLInputElement).value = preset.customer;
+    (document.getElementById('payment-method') as HTMLSelectElement).value = preset.paymentMethod;
+    (document.getElementById('pay-amount') as HTMLInputElement).value = preset.payAmount;
+    (document.getElementById('footer-note') as HTMLTextAreaElement).value = preset.footer;
+    (document.getElementById('wifi-info') as HTMLInputElement).value = preset.wifi;
+    (document.getElementById('qr-text') as HTMLInputElement).value = preset.qr;
+    (document.getElementById('show-barcode') as HTMLInputElement).checked = preset.showBarcode;
+    (document.getElementById('show-qrcode') as HTMLInputElement).checked = preset.showQrcode;
+
+    renderFormItems();
+    updateReceipt();
+    renderCatalogModal();
+  }
 
   document.querySelectorAll('.template-pill[data-template]').forEach(btn => {
     if (btn.getAttribute('data-template') === templateKey) {
@@ -554,10 +735,6 @@ export function loadTemplate(templateKey: string) {
       btn.classList.remove('active');
     }
   });
-
-  renderFormItems();
-  updateReceipt();
-  renderCatalogModal();
 }
 
 // Render Quick Catalog Items (Merging Database Products & Active Template)
@@ -1003,6 +1180,56 @@ export function initPOS() {
       el.addEventListener('change', updateReceipt);
     }
   });
+
+  const spbuInputs = [
+    'spbu-code', 'spbu-name', 'spbu-address', 'spbu-shift', 'spbu-notrans', 'spbu-time',
+    'spbu-pompa', 'spbu-operator', 'spbu-fuel', 'spbu-volume',
+    'spbu-price-nonsubsidi', 'spbu-price-subsidi', 'spbu-price-jual',
+    'spbu-pay-method-input', 'spbu-pay-amount-input'
+  ];
+
+  spbuInputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', updateSpbuReceipt);
+      el.addEventListener('change', updateSpbuReceipt);
+    }
+  });
+
+  const fuelSelect = document.getElementById('spbu-fuel') as HTMLSelectElement;
+  if (fuelSelect) {
+    fuelSelect.addEventListener('change', () => {
+      const fuel = fuelSelect.value;
+      const prices = FUEL_PRICES[fuel];
+      if (prices) {
+        const pNon = document.getElementById('spbu-price-nonsubsidi') as HTMLInputElement;
+        const pSub = document.getElementById('spbu-price-subsidi') as HTMLInputElement;
+        const pJual = document.getElementById('spbu-price-jual') as HTMLInputElement;
+        if (pNon) pNon.value = String(prices.non);
+        if (pSub) pSub.value = String(prices.sub);
+        if (pJual) pJual.value = String(prices.jual);
+
+        const volInput = document.getElementById('spbu-volume') as HTMLInputElement;
+        const volume = parseFloat(volInput?.value) || 0;
+        const payInput = document.getElementById('spbu-pay-amount-input') as HTMLInputElement;
+        if (payInput) payInput.value = String(Math.round(volume * prices.jual));
+
+        updateSpbuReceipt();
+      }
+    });
+  }
+
+  const volInput = document.getElementById('spbu-volume') as HTMLInputElement;
+  if (volInput) {
+    volInput.addEventListener('input', () => {
+      const volume = parseFloat(volInput.value) || 0;
+      const priceJual = parseFloat((document.getElementById('spbu-price-jual') as HTMLInputElement)?.value) || 0;
+      const totalDibayar = Math.round(volume * priceJual);
+      const payInput = document.getElementById('spbu-pay-amount-input') as HTMLInputElement;
+      if (payInput) payInput.value = String(totalDibayar);
+      updateSpbuReceipt();
+    });
+  }
 
   // Save Store Settings to Database Button
   const btnSaveStoreDb = document.getElementById('btn-save-store-db');
