@@ -424,25 +424,74 @@ input::placeholder, textarea::placeholder {
 }
 
 .thermal-paper-wrap.width-58mm {
-  width: 310px;
+  width: 290px;
 }
 
 .thermal-paper-wrap.width-80mm {
-  width: 420px;
+  width: 400px;
 }
 
 .thermal-paper {
   background: #ffffff;
   color: #000000;
-  padding: 18px 12px 22px 12px;
+  padding: 16px 12px 20px 12px;
   font-family: 'Roboto Condensed', 'Arial Bold', Arial, -apple-system, sans-serif;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.25;
   position: relative;
   border-radius: 4px 4px 0 0;
   user-select: text;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
+  box-sizing: border-box;
+}
+
+/* 58mm screen adjustments (scaled proportion) */
+.thermal-paper-wrap.width-58mm .thermal-paper {
+  padding: 14px 10px 18px 10px;
+  font-size: 11.5px;
+}
+.thermal-paper-wrap.width-58mm .t-title {
+  font-size: 13.5px;
+}
+.thermal-paper-wrap.width-58mm .t-subtitle,
+.thermal-paper-wrap.width-58mm .t-address,
+.thermal-paper-wrap.width-58mm .t-meta {
+  font-size: 11.5px;
+}
+.thermal-paper-wrap.width-58mm .t-item-name {
+  font-size: 12px;
+}
+.thermal-paper-wrap.width-58mm .t-item-calc,
+.thermal-paper-wrap.width-58mm .t-summary {
+  font-size: 11.5px;
+}
+.thermal-paper-wrap.width-58mm .t-summary-row.bold {
+  font-size: 14.5px;
+}
+
+/* 80mm screen adjustments (scaled proportion) */
+.thermal-paper-wrap.width-80mm .thermal-paper {
+  padding: 16px 14px 20px 14px;
+  font-size: 12.5px;
+}
+.thermal-paper-wrap.width-80mm .t-title {
+  font-size: 14.5px;
+}
+.thermal-paper-wrap.width-80mm .t-subtitle,
+.thermal-paper-wrap.width-80mm .t-address,
+.thermal-paper-wrap.width-80mm .t-meta {
+  font-size: 12.5px;
+}
+.thermal-paper-wrap.width-80mm .t-item-name {
+  font-size: 13px;
+}
+.thermal-paper-wrap.width-80mm .t-item-calc,
+.thermal-paper-wrap.width-80mm .t-summary {
+  font-size: 12.5px;
+}
+.thermal-paper-wrap.width-80mm .t-summary-row.bold {
+  font-size: 16.5px;
 }
 
 /* Ink styles */
@@ -489,13 +538,13 @@ input::placeholder, textarea::placeholder {
 
 .t-title {
   font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif;
-  font-size: 16.5px;
+  font-size: 14.5px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   color: #000;
-  -webkit-text-stroke: 0.55px #000;
-  text-shadow: 0 0 0.5px #000;
+  -webkit-text-stroke: 0.4px #000;
+  text-shadow: 0 0 0.4px #000;
   margin-bottom: 2px;
 }
 
@@ -854,10 +903,10 @@ input::placeholder, textarea::placeholder {
 
   body.print-80mm .t-title {
     font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
-    font-size: 13.5pt !important;
+    font-size: 11.5pt !important;
     font-weight: 900 !important;
     letter-spacing: 0.2px !important;
-    -webkit-text-stroke: 0.5px #000 !important;
+    -webkit-text-stroke: 0.35px #000 !important;
   }
 
   body.print-80mm .t-subtitle,
@@ -917,10 +966,10 @@ input::placeholder, textarea::placeholder {
 
   body.print-58mm .t-title {
     font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif !important;
-    font-size: 10.5pt !important;
+    font-size: 10pt !important;
     font-weight: 900 !important;
     letter-spacing: 0.1px !important;
-    -webkit-text-stroke: 0.4px #000 !important;
+    -webkit-text-stroke: 0.3px #000 !important;
   }
 
   body.print-58mm .t-subtitle,
