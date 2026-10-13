@@ -40,7 +40,7 @@ export const PRESETS: Record<string, any> = {
     sales: "wiwik",
     customer: "",
     paymentMethod: "QRIS",
-    payAmount: 900000,
+    payAmount: 249000,
     footer: "Barang yang sudah dibeli tidak dapat ditukar\natau dikembalikan\nTerima Kasih\nWA Admin : 085251822145",
     wifi: "",
     qr: "",
@@ -49,10 +49,10 @@ export const PRESETS: Record<string, any> = {
     showBarcode: false,
     showQrcode: false,
     items: [
-      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 900000 }
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", qty: 1, unit: "pcs", price: 249000 }
     ],
     catalog: [
-      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", unit: "pcs", price: 900000 },
+      { name: "CONVERTER JETE X10 ADAPTER ETHERNET CONV...", unit: "pcs", price: 249000 },
       { name: "SSD NVMe 512GB PCIe Gen3", unit: "pcs", price: 420000 },
       { name: "SSD SATA 2.5 256GB", unit: "pcs", price: 235000 },
       { name: "RAM DDR4 8GB 3200MHz", unit: "pcs", price: 280000 },
