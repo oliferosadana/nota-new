@@ -1286,7 +1286,7 @@ function saveReceiptAsImage() {
   ctx.fillText(storeName, width / 2, y);
   y += 22;
 
-  ctx.font = '700 13.5px Roboto Condensed, Arial, sans-serif';
+  ctx.font = '700 13.5px Arial Black, Roboto Condensed, Arial, sans-serif';
   const address = document.getElementById('store-address').value;
   if (address) {
     ctx.fillText(address, width / 2, y);
@@ -1308,7 +1308,7 @@ function saveReceiptAsImage() {
 
   // Meta
   ctx.textAlign = 'left';
-  ctx.font = '700 13px Roboto Condensed, Arial, sans-serif';
+  ctx.font = '700 13px Arial Black, Roboto Condensed, Arial, sans-serif';
   ctx.fillText(document.getElementById('tx-no').value, 15, y);
   y += 18;
   ctx.fillText(document.getElementById('tx-date').value, 15, y);
@@ -1335,11 +1335,11 @@ function saveReceiptAsImage() {
   let subtotal = 0;
   AppState.items.forEach(it => {
     ctx.textAlign = 'left';
-    ctx.font = '800 13.5px Roboto Condensed, Arial, sans-serif';
+    ctx.font = '800 13.5px Arial Black, Roboto Condensed, Arial, sans-serif';
     ctx.fillText(it.name, 15, y);
     y += 18;
 
-    ctx.font = '700 13px Roboto Condensed, Arial, sans-serif';
+    ctx.font = '700 13px Arial Black, Roboto Condensed, Arial, sans-serif';
     const unitStr = it.unit ? ` ${it.unit}` : ' pcs';
     ctx.fillText(`${it.qty}${unitStr} x ${formatNumber(it.price)}`, 15, y);
     ctx.textAlign = 'right';
@@ -1365,7 +1365,7 @@ function saveReceiptAsImage() {
   const grandTotal = Math.max(0, subtotal - discount + taxAmount + serviceFee);
 
   ctx.textAlign = 'left';
-  ctx.font = '700 13px Roboto Condensed, Arial, sans-serif';
+  ctx.font = '700 13px Arial Black, Roboto Condensed, Arial, sans-serif';
   ctx.fillText('Subtotal', 15, y);
   ctx.textAlign = 'right';
   ctx.fillText(formatNumber(subtotal), width - 15, y);
@@ -1394,7 +1394,7 @@ function saveReceiptAsImage() {
   }
   y += 4;
 
-  ctx.font = '900 18px Arial Black, Roboto Condensed, sans-serif';
+  ctx.font = '900 13.5px Arial Black, Roboto Condensed, sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('TOTAL', 15, y);
   ctx.textAlign = 'right';
@@ -1411,7 +1411,7 @@ function saveReceiptAsImage() {
   // Payment
   const payMethod = document.getElementById('payment-method').value;
   const payAmount = parseFloat(document.getElementById('pay-amount').value) || grandTotal;
-  ctx.font = '800 14px Roboto Condensed, Segoe UI, Arial, sans-serif';
+  ctx.font = '800 13.5px Arial Black, Roboto Condensed, Arial, sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText(payMethod, 15, y);
   ctx.textAlign = 'right';
@@ -1426,7 +1426,7 @@ function saveReceiptAsImage() {
   y += 24;
 
   // Footer Notes
-  ctx.font = '600 13px Roboto Condensed, Segoe UI, Arial, sans-serif';
+  ctx.font = '600 12px Arial Black, Roboto Condensed, Arial, sans-serif';
   ctx.textAlign = 'center';
   const footerLines = document.getElementById('footer-note').value.split('\n');
   footerLines.forEach(l => {

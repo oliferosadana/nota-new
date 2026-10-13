@@ -811,7 +811,7 @@ export async function exportReceiptPNG() {
 
     const data = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
       <foreignObject width="100%" height="100%">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Roboto Condensed', Arial, sans-serif; background: #fff; color: #000; padding: 12px; box-sizing: border-box;">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Arial Black', 'Roboto Condensed', Arial, sans-serif; background: #fff; color: #000; padding: 12px; box-sizing: border-box;">
           ${receiptPaper.innerHTML}
         </div>
       </foreignObject>
