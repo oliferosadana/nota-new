@@ -660,51 +660,56 @@ input::placeholder, textarea::placeholder {
 
 /* =========================================================
    SPBU PERTAMINA RECEIPT TEMPLATE STYLING
+   Authentic 1:1 match for 58mm Thermal Receipt
    ========================================================= */
 .spbu-receipt {
-  font-family: 'Roboto Condensed', Arial, sans-serif;
+  font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
   color: #000;
   line-height: 1.25;
-  font-weight: 700;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
 }
 
 .spbu-logo-wrap {
   text-align: center;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .spbu-logo-svg {
   display: block;
-  margin: 0 auto 3px auto;
-  max-width: 145px;
+  margin: 0 auto 2px auto;
+  max-width: 125px;
   height: auto;
 }
 
 .spbu-header-center {
   text-align: center;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .spbu-code {
-  font-size: 13.5px;
-  font-weight: 900;
-  letter-spacing: 0.5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
 }
 
 .spbu-name {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .spbu-address {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.2;
   margin-top: 1px;
 }
 
 .spbu-meta {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 10.5px;
+  font-weight: 500;
   margin-top: 2px;
 }
 
@@ -718,20 +723,20 @@ input::placeholder, textarea::placeholder {
 }
 
 .spbu-divider {
-  border-top: 1px dotted rgba(0, 0, 0, 0.75);
-  margin: 4px 0;
+  border-top: 1px dotted rgba(0, 0, 0, 0.65);
+  margin: 3.5px 0;
   width: 100%;
 }
 
 .spbu-section {
-  font-size: 12px;
-  font-weight: 700;
-  margin: 2px 0;
+  font-size: 10.5px;
+  font-weight: 500;
+  margin: 1px 0;
 }
 
 .spbu-section-title {
-  font-weight: 700;
-  font-size: 12.5px;
+  font-weight: 500;
+  font-size: 10.5px;
   margin-bottom: 2px;
 }
 
@@ -743,54 +748,76 @@ input::placeholder, textarea::placeholder {
   margin-bottom: 1.5px;
 }
 
-.spbu-label {
-  width: 125px;
+.spbu-label-fill {
+  width: 80px;
   flex-shrink: 0;
+  font-weight: 500;
 }
 
-.thermal-paper-wrap.width-80mm .spbu-label {
-  width: 160px;
+.spbu-label-price {
+  width: 110px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.thermal-paper-wrap.width-80mm .spbu-label-fill {
+  width: 110px;
+}
+
+.thermal-paper-wrap.width-80mm .spbu-label-price {
+  width: 145px;
 }
 
 .spbu-sep {
-  width: 12px;
+  width: 8px;
   text-align: center;
   flex-shrink: 0;
   margin-right: 2px;
+  font-weight: 500;
 }
 
 .spbu-val {
   flex-grow: 1;
+  font-weight: 500;
 }
 
 .spbu-val-num {
-  flex-grow: 1;
+  width: 48px;
+  flex-shrink: 0;
   text-align: right;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
+.thermal-paper-wrap.width-80mm .spbu-val-num {
+  width: 65px;
+}
+
 .spbu-pay-section {
-  font-size: 13px;
-  font-weight: 700;
-  margin: 3px 0;
+  font-size: 10.5px;
+  font-weight: 500;
+  margin: 3px 0 2px 0;
 }
 
 .spbu-pay-method {
-  font-weight: 700;
+  font-weight: 500;
+  text-align: left;
 }
 
 .spbu-pay-amount {
   text-align: right;
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 500;
+  font-size: 10.5px;
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 .spbu-footer {
   text-align: center;
-  font-size: 11.5px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 500;
   line-height: 1.35;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* Quick Action Bottom Bar for Print Execution */
@@ -1227,30 +1254,38 @@ input::placeholder, textarea::placeholder {
   /* SPBU Print Rules */
   .spbu-receipt {
     width: 100% !important;
-    font-family: 'Roboto Condensed', Arial, sans-serif !important;
-    font-weight: 700 !important;
+    font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif !important;
+    font-weight: 500 !important;
     color: #000 !important;
   }
 
   .spbu-divider {
     border-top: 1px dotted #000 !important;
-    margin: 2mm 0 !important;
+    margin: 1.5mm 0 !important;
     width: 100% !important;
   }
 
-  body.print-80mm .spbu-code { font-size: 10.5pt !important; }
-  body.print-80mm .spbu-name { font-size: 10pt !important; }
-  body.print-80mm .spbu-address,
-  body.print-80mm .spbu-meta,
-  body.print-80mm .spbu-section { font-size: 9.5pt !important; }
-  body.print-80mm .spbu-label { width: 38mm !important; }
-  body.print-80mm .spbu-footer { font-size: 9pt !important; }
-
-  body.print-58mm .spbu-code { font-size: 9pt !important; }
-  body.print-58mm .spbu-name { font-size: 8.5pt !important; }
+  body.print-58mm .spbu-code { font-size: 9.5pt !important; font-weight: 700 !important; }
+  body.print-58mm .spbu-name { font-size: 8.5pt !important; font-weight: 500 !important; }
   body.print-58mm .spbu-address,
   body.print-58mm .spbu-meta,
-  body.print-58mm .spbu-section { font-size: 8pt !important; }
-  body.print-58mm .spbu-label { width: 28mm !important; }
-  body.print-58mm .spbu-footer { font-size: 7.5pt !important; }
+  body.print-58mm .spbu-section,
+  body.print-58mm .spbu-section-title { font-size: 8pt !important; font-weight: 500 !important; }
+  body.print-58mm .spbu-label-fill { width: 21mm !important; font-weight: 500 !important; }
+  body.print-58mm .spbu-label-price { width: 27mm !important; font-weight: 500 !important; }
+  body.print-58mm .spbu-val-num { width: 12mm !important; text-align: right !important; font-weight: 500 !important; }
+  body.print-58mm .spbu-pay-section { font-size: 8.5pt !important; font-weight: 500 !important; }
+  body.print-58mm .spbu-footer { font-size: 7.5pt !important; font-weight: 500 !important; line-height: 1.3 !important; }
+
+  body.print-80mm .spbu-code { font-size: 11.5pt !important; font-weight: 700 !important; }
+  body.print-80mm .spbu-name { font-size: 10.5pt !important; font-weight: 500 !important; }
+  body.print-80mm .spbu-address,
+  body.print-80mm .spbu-meta,
+  body.print-80mm .spbu-section,
+  body.print-80mm .spbu-section-title { font-size: 9.5pt !important; font-weight: 500 !important; }
+  body.print-80mm .spbu-label-fill { width: 28mm !important; font-weight: 500 !important; }
+  body.print-80mm .spbu-label-price { width: 36mm !important; font-weight: 500 !important; }
+  body.print-80mm .spbu-val-num { width: 16mm !important; text-align: right !important; font-weight: 500 !important; }
+  body.print-80mm .spbu-pay-section { font-size: 10pt !important; font-weight: 500 !important; }
+  body.print-80mm .spbu-footer { font-size: 9pt !important; font-weight: 500 !important; line-height: 1.3 !important; }
 }

@@ -467,14 +467,15 @@
             <!-- SPBU PERTAMINA RECEIPT VIEW -->
             <div id="receipt-spbu-view" class="spbu-receipt" style="display: none;">
               <!-- Pertamina Logo SVG -->
+              <!-- Pertamina Logo SVG -->
               <div class="spbu-logo-wrap">
-                <svg class="spbu-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 34" width="145" height="28">
+                <svg class="spbu-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 30" width="125" height="24">
                   <g fill="#000">
-                    <polygon points="12,3 29,3 21,13 4,13"></polygon>
-                    <polygon points="4,16 21,16 13,26 -4,26" transform="translate(3,0)"></polygon>
-                    <path d="M29,3 L36,3 C43,3 47,6.5 47,12.5 C47,18.5 43,22 36,22 L22,22 L28,13 L35,13 C36.5,13 37.5,12 37.5,10.5 C37.5,9 36.5,8 35,8 L26,8 Z"></path>
+                    <polygon points="12,2 26,2 19,12 5,12"></polygon>
+                    <path d="M19.5,13.5 L31.5,13.5 C32.5,13.5 33,14 32.5,15 L28,22 C27.5,23 26.5,23.5 25,23.5 L14,23.5 L17.5,18 L24,18 C24.5,18 24.8,17.8 25,17.5 L26,15.5 L18,15.5 Z"></path>
+                    <polygon points="6,19 18,19 12,28 0,28"></polygon>
                   </g>
-                  <text x="54" y="20.5" font-family="'Arial Black', 'Roboto Condensed', Arial, sans-serif" font-weight="900" font-size="16.5" letter-spacing="0.8" fill="#000">PERTAMINA</text>
+                  <text x="38" y="21" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="15" letter-spacing="0.5" fill="#000">PERTAMINA</text>
                 </svg>
               </div>
 
@@ -500,22 +501,22 @@
               <!-- Pengisian Section -->
               <div class="spbu-section">
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Pulau/Pompa</span>
+                  <span class="spbu-label-fill">Pulau/Pompa</span>
                   <span class="spbu-sep">:</span>
                   <span class="spbu-val" id="t-spbu-pompa">6</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Operator</span>
+                  <span class="spbu-label-fill">Operator</span>
                   <span class="spbu-sep">:</span>
                   <span class="spbu-val" id="t-spbu-operator">SALWA</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Jenis BBM</span>
+                  <span class="spbu-label-fill">Jenis BBM</span>
                   <span class="spbu-sep">:</span>
                   <span class="spbu-val" id="t-spbu-fuel">PERTALITE</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Volume</span>
+                  <span class="spbu-label-fill">Volume</span>
                   <span class="spbu-sep">:</span>
                   <span class="spbu-val" id="t-spbu-volume">3.00 liter</span>
                 </div>
@@ -527,39 +528,39 @@
               <div class="spbu-section">
                 <div class="spbu-section-title">Informasi Harga BBM (Rp/Liter)</div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Harga Non Subsidi</span>
+                  <span class="spbu-label-price">Harga Non Subsidi</span>
                   <span class="spbu-sep">:</span>
-                  <span class="spbu-val-num" id="t-spbu-price-nonsubsidi">18.101</span>
+                  <span class="spbu-val-num" id="t-spbu-price-nonsubsidi">18,101</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Subsidi Pemerintah</span>
+                  <span class="spbu-label-price">Subsidi Pemerintah</span>
                   <span class="spbu-sep">:</span>
-                  <span class="spbu-val-num" id="t-spbu-price-subsidi">8.101</span>
+                  <span class="spbu-val-num" id="t-spbu-price-subsidi">8,101</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Harga Jual</span>
+                  <span class="spbu-label-price">Harga Jual</span>
                   <span class="spbu-sep">:</span>
-                  <span class="spbu-val-num" id="t-spbu-price-jual">10.000</span>
+                  <span class="spbu-val-num" id="t-spbu-price-jual">10,000</span>
                 </div>
               </div>
 
               <!-- Total Penjualan Section -->
-              <div class="spbu-section" style="margin-top: 6px;">
+              <div class="spbu-section" style="margin-top: 5px;">
                 <div class="spbu-section-title">Total Penjualan (Rp)</div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Tanpa Subsidi</span>
+                  <span class="spbu-label-price">Tanpa Subsidi</span>
                   <span class="spbu-sep">:</span>
-                  <span class="spbu-val-num" id="t-spbu-tot-nonsubsidi">54.303</span>
+                  <span class="spbu-val-num" id="t-spbu-tot-nonsubsidi">54,303</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Subsidi Pemerintah</span>
+                  <span class="spbu-label-price">Subsidi Pemerintah</span>
                   <span class="spbu-sep">:</span>
-                  <span class="spbu-val-num" id="t-spbu-tot-subsidi">24.303</span>
+                  <span class="spbu-val-num" id="t-spbu-tot-subsidi">24,303</span>
                 </div>
                 <div class="spbu-col-row">
-                  <span class="spbu-label">Dibayar Konsumen</span>
+                  <span class="spbu-label-price">Dibayar Konsumen</span>
                   <span class="spbu-sep">:</span>
-                  <span class="spbu-val-num" id="t-spbu-tot-dibayar">30.000</span>
+                  <span class="spbu-val-num" id="t-spbu-tot-dibayar">30,000</span>
                 </div>
               </div>
 
@@ -568,7 +569,7 @@
               <!-- Payment Section -->
               <div class="spbu-pay-section">
                 <div class="spbu-pay-method" id="t-spbu-pay-method">CASH</div>
-                <div class="spbu-pay-amount" id="t-spbu-pay-amount">30.000</div>
+                <div class="spbu-pay-amount" id="t-spbu-pay-amount">30,000</div>
               </div>
 
               <div class="spbu-divider"></div>

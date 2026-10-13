@@ -574,6 +574,8 @@ export function renderFormItems() {
 }
 
 export function updateSpbuReceipt() {
+  const formatSpbu = (num: number) => Math.round(Number(num) || 0).toLocaleString('en-US');
+
   const spbuCode = (document.getElementById('spbu-code') as HTMLInputElement)?.value.trim() || '6476128';
   const spbuName = (document.getElementById('spbu-name') as HTMLInputElement)?.value.trim() || 'SPBU 64/6128';
   const spbuAddress = (document.getElementById('spbu-address') as HTMLInputElement)?.value.trim() || 'JALAN SULTAN HASANUDIN';
@@ -626,25 +628,25 @@ export function updateSpbuReceipt() {
   if (elFuel) elFuel.textContent = spbuFuel;
   if (elVolume) elVolume.textContent = `${volume.toFixed(2)} liter`;
 
-  if (elPriceNon) elPriceNon.textContent = formatRp(priceNon);
-  if (elPriceSub) elPriceSub.textContent = formatRp(priceSub);
-  if (elPriceJual) elPriceJual.textContent = formatRp(priceJual);
+  if (elPriceNon) elPriceNon.textContent = formatSpbu(priceNon);
+  if (elPriceSub) elPriceSub.textContent = formatSpbu(priceSub);
+  if (elPriceJual) elPriceJual.textContent = formatSpbu(priceJual);
 
-  if (elTotNon) elTotNon.textContent = formatRp(totalNon);
-  if (elTotSub) elTotSub.textContent = formatRp(totalSub);
-  if (elTotDibayar) elTotDibayar.textContent = formatRp(totalDibayar);
+  if (elTotNon) elTotNon.textContent = formatSpbu(totalNon);
+  if (elTotSub) elTotSub.textContent = formatSpbu(totalSub);
+  if (elTotDibayar) elTotDibayar.textContent = formatSpbu(totalDibayar);
 
   if (elPayMethod) elPayMethod.textContent = payMethod;
-  if (elPayAmount) elPayAmount.textContent = formatRp(payAmount);
+  if (elPayAmount) elPayAmount.textContent = formatSpbu(payAmount);
 
-  if (elFootSub) elFootSub.textContent = `Rp ${formatRp(totalSub)}`;
+  if (elFootSub) elFootSub.textContent = `Rp ${formatSpbu(totalSub)}`;
 
   const calcNon = document.getElementById('spbu-calc-nonsubsidi');
   const calcSub = document.getElementById('spbu-calc-subsidi');
   const calcDibayar = document.getElementById('spbu-calc-dibayar');
-  if (calcNon) calcNon.textContent = `Rp ${formatRp(totalNon)}`;
-  if (calcSub) calcSub.textContent = `Rp ${formatRp(totalSub)}`;
-  if (calcDibayar) calcDibayar.textContent = `Rp ${formatRp(totalDibayar)}`;
+  if (calcNon) calcNon.textContent = `Rp ${formatSpbu(totalNon)}`;
+  if (calcSub) calcSub.textContent = `Rp ${formatSpbu(totalSub)}`;
+  if (calcDibayar) calcDibayar.textContent = `Rp ${formatSpbu(totalDibayar)}`;
 }
 
 export function loadTemplate(templateKey: string) {
