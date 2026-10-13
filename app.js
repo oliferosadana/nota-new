@@ -446,19 +446,17 @@ function updateCalculation() {
   const txSales = document.getElementById('tx-sales').value;
   const txCustomer = document.getElementById('tx-customer').value;
 
-  const discount = parseFloat(document.getElementById('calc-discount').value) || 0;
-  const taxPct = parseFloat(document.getElementById('calc-tax').value) || 0;
-  const serviceLabelInput = document.getElementById('calc-service-label');
-  const serviceLabel = (serviceLabelInput ? serviceLabelInput.value : '').trim() || 'Layanan';
-  const serviceFee = parseFloat(document.getElementById('calc-service').value) || 0;
-  const payMethod = document.getElementById('payment-method').value;
-  let payAmount = parseFloat(document.getElementById('pay-amount').value) || 0;
+  const discount = 0;
+  const taxPct = 0;
+  const serviceFee = 0;
+  const payMethod = document.getElementById('payment-method') ? document.getElementById('payment-method').value : 'QRIS';
+  let payAmount = parseFloat(document.getElementById('pay-amount')?.value) || 0;
 
-  const footerNote = document.getElementById('footer-note').value;
-  const wifiInfo = document.getElementById('wifi-info').value;
-  const qrText = document.getElementById('qr-text').value;
-  const showBarcode = document.getElementById('show-barcode').checked;
-  const showQrcode = document.getElementById('show-qrcode').checked;
+  const footerNote = document.getElementById('footer-note')?.value || '';
+  const wifiInfo = document.getElementById('wifi-info')?.value || '';
+  const qrText = document.getElementById('qr-text')?.value || '';
+  const showBarcode = document.getElementById('show-barcode')?.checked || false;
+  const showQrcode = document.getElementById('show-qrcode')?.checked || false;
 
   // Compute Subtotal
   let subtotal = 0;
@@ -466,47 +464,34 @@ function updateCalculation() {
     subtotal += (it.qty * it.price);
   });
 
-  const taxAmount = Math.round((Math.max(0, subtotal - discount)) * (taxPct / 100));
-  const grandTotal = Math.max(0, subtotal - discount + taxAmount + serviceFee);
+  const grandTotal = subtotal;
 
   // If payAmount is 0 or unassigned, default to grandTotal for cashless
   if (payAmount === 0 && grandTotal > 0 && payMethod !== 'TUNAI') {
     payAmount = grandTotal;
-    document.getElementById('pay-amount').value = grandTotal;
+    const payInput = document.getElementById('pay-amount');
+    if (payInput) payInput.value = grandTotal;
   }
-  const changeAmount = payAmount - grandTotal;
+  const changeAmount = 0;
 
   // Update Left Summary Box
-  document.getElementById('sum-subtotal').textContent = formatNumber(subtotal);
+  const sumSubEl = document.getElementById('sum-subtotal');
+  if (sumSubEl) sumSubEl.textContent = formatNumber(subtotal);
 
   const sumRowDisc = document.getElementById('sum-row-discount');
-  if (discount > 0) {
-    sumRowDisc.style.display = 'flex';
-    document.getElementById('sum-discount').textContent = '- ' + formatNumber(discount);
-  } else {
-    sumRowDisc.style.display = 'none';
-  }
+  if (sumRowDisc) sumRowDisc.style.display = 'none';
 
   const sumRowTax = document.getElementById('sum-row-tax');
-  if (taxPct > 0) {
-    sumRowTax.style.display = 'flex';
-    document.getElementById('sum-tax').textContent = `+ ${formatNumber(taxAmount)} (${taxPct}%)`;
-  } else {
-    sumRowTax.style.display = 'none';
-  }
+  if (sumRowTax) sumRowTax.style.display = 'none';
 
   const sumRowSrv = document.getElementById('sum-row-service');
-  if (serviceFee > 0) {
-    sumRowSrv.style.display = 'flex';
-    const sumSrvLabel = document.getElementById('sum-service-label');
-    if (sumSrvLabel) sumSrvLabel.textContent = serviceLabel + ':';
-    document.getElementById('sum-service').textContent = '+ ' + formatNumber(serviceFee);
-  } else {
-    sumRowSrv.style.display = 'none';
-  }
+  if (sumRowSrv) sumRowSrv.style.display = 'none';
 
-  document.getElementById('sum-grandtotal').textContent = formatNumber(grandTotal);
-  document.getElementById('sum-change').textContent = formatNumber(changeAmount);
+  const sumGrandEl = document.getElementById('sum-grandtotal');
+  if (sumGrandEl) sumGrandEl.textContent = formatNumber(grandTotal);
+
+  const sumChangeEl = document.getElementById('sum-change');
+  if (sumChangeEl && sumChangeEl.parentElement) sumChangeEl.parentElement.style.display = 'none';
 
   // Update Live Thermal Preview (matching UD Benthenk photo)
   document.getElementById('t-store-name').textContent = storeName;
@@ -559,47 +544,29 @@ function updateCalculation() {
   });
 
   // Summary in preview
-  document.getElementById('t-sum-subtotal').textContent = formatNumber(subtotal);
+  const tSubEl = document.getElementById('t-sum-subtotal');
+  if (tSubEl) tSubEl.textContent = formatNumber(subtotal);
 
   const tRowDisc = document.getElementById('t-row-discount');
-  if (discount > 0) {
-    tRowDisc.style.display = 'flex';
-    document.getElementById('t-sum-discount').textContent = '- ' + formatNumber(discount);
-  } else {
-    tRowDisc.style.display = 'none';
-  }
+  if (tRowDisc) tRowDisc.style.display = 'none';
 
   const tRowTax = document.getElementById('t-row-tax');
-  if (taxPct > 0) {
-    tRowTax.style.display = 'flex';
-    document.getElementById('t-sum-tax').textContent = `+ ${formatNumber(taxAmount)}`;
-  } else {
-    tRowTax.style.display = 'none';
-  }
+  if (tRowTax) tRowTax.style.display = 'none';
 
   const tRowSrv = document.getElementById('t-row-service');
-  if (serviceFee > 0) {
-    tRowSrv.style.display = 'flex';
-    const tSumSrvLabel = document.getElementById('t-sum-service-label');
-    if (tSumSrvLabel) tSumSrvLabel.textContent = serviceLabel;
-    document.getElementById('t-sum-service').textContent = `+ ${formatNumber(serviceFee)}`;
-  } else {
-    tRowSrv.style.display = 'none';
-  }
+  if (tRowSrv) tRowSrv.style.display = 'none';
 
-  document.getElementById('t-sum-grandtotal').textContent = formatNumber(grandTotal);
-  document.getElementById('t-pay-method').textContent = payMethod;
-  document.getElementById('t-pay-amount').textContent = formatNumber(payAmount > 0 ? payAmount : grandTotal);
+  const tGrandEl = document.getElementById('t-sum-grandtotal');
+  if (tGrandEl) tGrandEl.textContent = formatNumber(grandTotal);
+
+  const tPayMethodEl = document.getElementById('t-pay-method');
+  if (tPayMethodEl) tPayMethodEl.textContent = payMethod;
+
+  const tPayAmountEl = document.getElementById('t-pay-amount');
+  if (tPayAmountEl) tPayAmountEl.textContent = formatNumber(payAmount > 0 ? payAmount : grandTotal);
 
   const changeRow = document.getElementById('t-row-change');
-  if (changeRow) {
-    if (payMethod === 'TUNAI' && changeAmount > 0) {
-      changeRow.style.display = 'flex';
-      document.getElementById('t-sum-change').textContent = formatNumber(changeAmount);
-    } else {
-      changeRow.style.display = 'none';
-    }
-  }
+  if (changeRow) changeRow.style.display = 'none';
 
   // Footer in preview
   document.getElementById('t-footer-text').textContent = footerNote;

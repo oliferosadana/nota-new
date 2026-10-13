@@ -138,22 +138,6 @@ export const prerender = false;
 
         <div class="form-grid" style="margin-bottom: 16px;">
           <div class="form-group">
-            <label for="calc-discount">Diskon Nota (Rp)</label>
-            <input type="number" id="calc-discount" value="0" min="0" step="500" />
-          </div>
-          <div class="form-group">
-            <label for="calc-tax">Pajak PPN (%)</label>
-            <input type="number" id="calc-tax" value="0" min="0" max="100" step="1" />
-          </div>
-          <div class="form-group">
-            <label for="calc-service-label">Deskripsi / Label Layanan</label>
-            <input type="text" id="calc-service-label" value="Layanan" placeholder="Contoh: Layanan / Ongkir / Biaya Admin" />
-          </div>
-          <div class="form-group">
-            <label for="calc-service">Biaya Layanan (Rp)</label>
-            <input type="number" id="calc-service" value="0" min="0" step="500" />
-          </div>
-          <div class="form-group">
             <label for="payment-method">Metode Bayar</label>
             <select id="payment-method">
               <option value="TUNAI">TUNAI (Cash)</option>
@@ -164,10 +148,10 @@ export const prerender = false;
             </select>
           </div>
           <div class="form-group">
-            <label for="pay-amount">Uang Diterima / Bayar (Rp)</label>
+            <label for="pay-amount">Nominal Bayar (Rp)</label>
             <input type="number" id="pay-amount" value="900000" min="0" step="1000" />
           </div>
-          <div class="form-group" style="justify-content: flex-end;">
+          <div class="form-group col-span-2" style="justify-content: flex-end;">
             <div style="display: flex; gap: 6px;">
               <button type="button" class="btn btn-outline btn-sm" id="btn-pay-exact">Uang Pas</button>
               <button type="button" class="btn btn-outline btn-sm" id="btn-pay-50k">50k</button>
@@ -181,25 +165,9 @@ export const prerender = false;
             <span>Subtotal Barang:</span>
             <strong id="sum-subtotal">Rp 0</strong>
           </div>
-          <div class="summary-row" id="sum-row-discount" style="display: none; color: #f87171;">
-            <span>Diskon:</span>
-            <strong id="sum-discount">- Rp 0</strong>
-          </div>
-          <div class="summary-row" id="sum-row-tax" style="display: none;">
-            <span>Pajak PPN:</span>
-            <strong id="sum-tax">+ Rp 0</strong>
-          </div>
-          <div class="summary-row" id="sum-row-service" style="display: none;">
-            <span id="sum-service-label">Layanan:</span>
-            <strong id="sum-service">+ Rp 0</strong>
-          </div>
           <div class="summary-row total">
-            <span>TOTAL AKHIR:</span>
+            <span>TOTAL:</span>
             <span id="sum-grandtotal">Rp 0</span>
-          </div>
-          <div class="summary-row change">
-            <span>KEMBALIAN:</span>
-            <span id="sum-change">Rp 0</span>
           </div>
         </div>
       </div>
@@ -310,18 +278,6 @@ export const prerender = false;
                 <span>Subtotal</span>
                 <span id="t-sum-subtotal">900.000</span>
               </div>
-              <div class="t-summary-row" id="t-row-discount" style="display: none;">
-                <span>Diskon</span>
-                <span id="t-sum-discount">- 0</span>
-              </div>
-              <div class="t-summary-row" id="t-row-tax" style="display: none;">
-                <span>PPN</span>
-                <span id="t-sum-tax">+ 0</span>
-              </div>
-              <div class="t-summary-row" id="t-row-service" style="display: none;">
-                <span id="t-sum-service-label">Layanan</span>
-                <span id="t-sum-service">+ 0</span>
-              </div>
               <div class="t-summary-row bold" id="t-row-total">
                 <span>TOTAL</span>
                 <span id="t-sum-grandtotal">900.000</span>
@@ -330,10 +286,6 @@ export const prerender = false;
               <div class="t-summary-row" id="t-row-pay">
                 <span id="t-pay-method">QRIS</span>
                 <span id="t-pay-amount">900.000</span>
-              </div>
-              <div class="t-summary-row" id="t-row-change" style="display: none;">
-                <span>KEMBALI</span>
-                <span id="t-sum-change">0</span>
               </div>
             </div>
 

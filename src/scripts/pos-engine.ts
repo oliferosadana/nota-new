@@ -284,10 +284,10 @@ export function updateReceipt() {
   const txCashierInput = document.getElementById('tx-cashier') as HTMLInputElement;
   const txSalesInput = document.getElementById('tx-sales') as HTMLInputElement;
   const txCustomerInput = document.getElementById('tx-customer') as HTMLInputElement;
-  const calcDiscountInput = document.getElementById('calc-discount') as HTMLInputElement;
-  const calcTaxInput = document.getElementById('calc-tax') as HTMLInputElement;
-  const calcServiceInput = document.getElementById('calc-service') as HTMLInputElement;
-  const calcServiceLabelInput = document.getElementById('calc-service-label') as HTMLInputElement;
+  const calcDiscountInput = document.getElementById('calc-discount') as HTMLInputElement | null;
+  const calcTaxInput = document.getElementById('calc-tax') as HTMLInputElement | null;
+  const calcServiceInput = document.getElementById('calc-service') as HTMLInputElement | null;
+  const calcServiceLabelInput = document.getElementById('calc-service-label') as HTMLInputElement | null;
   const paymentMethodInput = document.getElementById('payment-method') as HTMLSelectElement;
   const payAmountInput = document.getElementById('pay-amount') as HTMLInputElement;
   const footerNoteInput = document.getElementById('footer-note') as HTMLTextAreaElement;
@@ -408,58 +408,27 @@ export function updateReceipt() {
     });
   }
 
-  const discount = Math.max(0, Number(calcDiscountInput.value) || 0);
-  const taxPct = Math.max(0, Number(calcTaxInput.value) || 0);
-  const serviceAmount = Math.max(0, Number(calcServiceInput.value) || 0);
-  const serviceLabel = calcServiceLabelInput.value.trim() || 'Layanan';
-
-  const afterDiscount = Math.max(0, subtotal - discount);
-  const taxAmount = Math.round((afterDiscount * taxPct) / 100);
-  const grandTotal = afterDiscount + taxAmount + serviceAmount;
-  const payAmount = Number(payAmountInput.value) || 0;
-  const change = Math.max(0, payAmount - grandTotal);
-  const paymentMethod = paymentMethodInput.value;
+  const grandTotal = subtotal;
+  const payAmount = Number(payAmountInput ? payAmountInput.value : 0) || grandTotal;
+  const paymentMethod = paymentMethodInput ? paymentMethodInput.value : 'QRIS';
 
   if (sumSubtotalEl) sumSubtotalEl.textContent = `Rp ${formatRp(subtotal)}`;
-  if (sumDiscountEl && sumRowDiscountEl) {
-    sumDiscountEl.textContent = `- Rp ${formatRp(discount)}`;
-    sumRowDiscountEl.style.display = discount > 0 ? 'flex' : 'none';
-  }
-  if (sumTaxEl && sumRowTaxEl) {
-    sumTaxEl.textContent = `+ Rp ${formatRp(taxAmount)} (${taxPct}%)`;
-    sumRowTaxEl.style.display = taxPct > 0 ? 'flex' : 'none';
-  }
-  if (sumServiceEl && sumRowServiceEl && sumServiceLabelEl) {
-    sumServiceLabelEl.textContent = `${serviceLabel}:`;
-    sumServiceEl.textContent = `+ Rp ${formatRp(serviceAmount)}`;
-    sumRowServiceEl.style.display = serviceAmount > 0 ? 'flex' : 'none';
-  }
+  if (sumDiscountEl && sumRowDiscountEl) sumRowDiscountEl.style.display = 'none';
+  if (sumTaxEl && sumRowTaxEl) sumRowTaxEl.style.display = 'none';
+  if (sumServiceEl && sumRowServiceEl) sumRowServiceEl.style.display = 'none';
   if (sumGrandtotalEl) sumGrandtotalEl.textContent = `Rp ${formatRp(grandTotal)}`;
-  if (sumChangeEl) sumChangeEl.textContent = `Rp ${formatRp(change)}`;
+  if (sumChangeEl && sumChangeEl.parentElement) sumChangeEl.parentElement.style.display = 'none';
 
   if (tSumSubtotal) tSumSubtotal.textContent = formatRp(subtotal);
-  if (tSumDiscount && tRowDiscount) {
-    tSumDiscount.textContent = `- ${formatRp(discount)}`;
-    tRowDiscount.style.display = discount > 0 ? 'flex' : 'none';
-  }
-  if (tSumTax && tRowTax) {
-    tSumTax.textContent = `+ ${formatRp(taxAmount)}`;
-    tRowTax.style.display = taxPct > 0 ? 'flex' : 'none';
-  }
-  if (tSumService && tRowService && tSumServiceLabel) {
-    tSumServiceLabel.textContent = serviceLabel;
-    tSumService.textContent = `+ ${formatRp(serviceAmount)}`;
-    tRowService.style.display = serviceAmount > 0 ? 'flex' : 'none';
-  }
+  if (tRowDiscount) tRowDiscount.style.display = 'none';
+  if (tRowTax) tRowTax.style.display = 'none';
+  if (tRowService) tRowService.style.display = 'none';
   if (tSumGrandtotal) tSumGrandtotal.textContent = formatRp(grandTotal);
 
   if (tPayMethod) tPayMethod.textContent = paymentMethod;
   if (tPayAmount) tPayAmount.textContent = formatRp(payAmount);
 
-  if (tRowChange && tSumChange) {
-    tSumChange.textContent = formatRp(change);
-    tRowChange.style.display = paymentMethod === 'TUNAI' ? 'flex' : 'none';
-  }
+  if (tRowChange) tRowChange.style.display = 'none';
 
   if (tFooterText) {
     tFooterText.textContent = footerNoteInput.value;
@@ -727,11 +696,7 @@ export function saveTransaction() {
 
   let subtotal = 0;
   state.items.forEach(i => subtotal += (i.qty * i.price));
-  const discount = Number((document.getElementById('calc-discount') as HTMLInputElement).value) || 0;
-  const taxPct = Number((document.getElementById('calc-tax') as HTMLInputElement).value) || 0;
-  const serviceAmount = Number((document.getElementById('calc-service') as HTMLInputElement).value) || 0;
-  const grandTotal = Math.max(0, subtotal - discount) * (1 + taxPct / 100) + serviceAmount;
-  const change = Math.max(0, payAmount - grandTotal);
+  const grandTotal = subtotal;
 
   const record = {
     txNo,
@@ -743,13 +708,13 @@ export function saveTransaction() {
     customer,
     items: JSON.parse(JSON.stringify(state.items)),
     subtotal,
-    discount,
-    taxPct,
-    serviceAmount,
+    discount: 0,
+    taxPct: 0,
+    serviceAmount: 0,
     grandTotal,
     paymentMethod,
     payAmount,
-    change,
+    change: 0,
     timestamp: new Date().toISOString()
   };
 
@@ -915,28 +880,16 @@ export function buildEscPosPayload(): Uint8Array {
   builder.divider();
 
   // Totals
-  const discount = Number((document.getElementById('calc-discount') as HTMLInputElement).value) || 0;
-  const taxPct = Number((document.getElementById('calc-tax') as HTMLInputElement).value) || 0;
-  const serviceAmount = Number((document.getElementById('calc-service') as HTMLInputElement).value) || 0;
-  const grandTotal = Math.max(0, subtotal - discount) * (1 + taxPct / 100) + serviceAmount;
-  const payAmount = Number((document.getElementById('pay-amount') as HTMLInputElement).value) || 0;
-  const change = Math.max(0, payAmount - grandTotal);
+  const grandTotal = subtotal;
+  const payAmount = Number((document.getElementById('pay-amount') as HTMLInputElement)?.value) || grandTotal;
 
   builder.twoColumns('Subtotal', formatRp(subtotal));
-  if (discount > 0) builder.twoColumns('Diskon', `- ${formatRp(discount)}`);
-  if (taxPct > 0) builder.twoColumns('PPN', `+ ${formatRp(Math.round(subtotal * taxPct / 100))}`);
-  if (serviceAmount > 0) builder.twoColumns('Layanan', `+ ${formatRp(serviceAmount)}`);
-
   builder.bold(true).size(1, 2);
   builder.twoColumns('TOTAL', formatRp(grandTotal));
   builder.bold(false).size(1, 1);
   builder.divider();
 
   builder.twoColumns(paymentMethod, formatRp(payAmount));
-  if (paymentMethod === 'TUNAI') {
-    builder.twoColumns('KEMBALI', formatRp(change));
-  }
-
   builder.divider();
   builder.align('center');
   if (footerNote) {
