@@ -578,14 +578,39 @@ export const prerender = false;
   <HistoryModal />
   <AuthModal />
 
+  <style>
+    /* Cegah flicker dashboard sebelum status autentikasi diverifikasi */
+    body:not(.auth-verified) .app-container,
+    body:not(.auth-verified) .app-header {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+
   <script>
+    import { supabase } from '../lib/supabase';
     import { initPOS } from '../scripts/pos-engine';
     
-    // Initialize POS dashboard directly (no forced redirect loop)
+    // Verifikasi sesi kasir pada akses awal tanpa redirect loop
+    async function verifyAuthAndInit() {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session || !session.user) {
+          window.location.replace('/login');
+          return;
+        }
+        document.body.classList.add('auth-verified');
+        initPOS();
+      } catch (err) {
+        console.warn('Gagal memverifikasi sesi kasir:', err);
+        window.location.replace('/login');
+      }
+    }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => initPOS());
+      document.addEventListener('DOMContentLoaded', verifyAuthAndInit);
     } else {
-      initPOS();
+      verifyAuthAndInit();
     }
   </script>
 </Layout>

@@ -357,7 +357,15 @@ function initApp() {
   bindEvents();
   renderHistoryCount();
   if (window.SupabaseAuth) {
-    window.SupabaseAuth.checkInitialSession();
+    window.SupabaseAuth.checkInitialSession().then(user => {
+      if (!user) {
+        // Tampilkan modal autentikasi pada saat akses pertama kali jika kasir belum masuk
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) {
+          authModal.classList.add('active');
+        }
+      }
+    });
   }
 }
 

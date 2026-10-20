@@ -298,6 +298,7 @@ export const prerender = false;
   </style>
 
   <script>
+    import { supabase } from '../lib/supabase';
     import { authService } from '../lib/auth-service';
 
     const formLogin = document.getElementById('login-form') as HTMLFormElement;
@@ -312,6 +313,20 @@ export const prerender = false;
       authAlert.textContent = message;
     }
 
+    // Periksa apakah kasir sudah memiliki sesi aktif sebelumnya tanpa auto-bounce loop
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && session.user) {
+        const userEmail = session.user.email || 'Kasir';
+        showAlert(`Sesi aktif terdeteksi: ${userEmail}. Klik tombol di bawah untuk membuka Dashboard POS.`, false);
+        const btnSubmit = document.getElementById('btn-submit-login') as HTMLButtonElement;
+        if (btnSubmit) {
+          btnSubmit.innerHTML = '<span>Buka Dashboard POS</span> <svg class="w-4 h-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+        }
+      }
+    }).catch((err) => {
+      console.warn('Session check info:', err);
+    });
+
     // Handle Login Submit
     if (formLogin) {
       formLogin.addEventListener('submit', async (e) => {
@@ -319,6 +334,17 @@ export const prerender = false;
         const email = (document.getElementById('login-email') as HTMLInputElement).value;
         const password = (document.getElementById('login-password') as HTMLInputElement).value;
         const btnSubmit = document.getElementById('btn-submit-login') as HTMLButtonElement;
+
+        // Jika form kosong namun sesi sudah aktif, langsung navigasi ke dashboard
+        if (!email && !password) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session && session.user) {
+            window.location.replace('/');
+            return;
+          }
+          showAlert('Email dan kata sandi wajib diisi.');
+          return;
+        }
 
         if (!email || !password) {
           showAlert('Email dan kata sandi wajib diisi.');
@@ -333,8 +359,8 @@ export const prerender = false;
           await authService.login(email, password);
           showAlert('Login berhasil! Mengalihkan ke Dashboard...', false);
           setTimeout(() => {
-            window.location.href = '/';
-          }, 400);
+            window.location.replace('/');
+          }, 300);
         } catch (err: any) {
           showAlert(err.message || 'Login gagal. Periksa kembali email dan kata sandi.');
         } finally {

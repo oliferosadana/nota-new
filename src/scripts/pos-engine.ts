@@ -1546,12 +1546,10 @@ export function initPOS() {
         const userEmail = authService.getCurrentUser()?.email || 'akun ini';
         if (confirm(`Apakah Anda ingin keluar dari ${userEmail}?`)) {
           await authService.logout();
-          showToast('Anda telah keluar dari akun.', 'info');
+          window.location.replace('/login');
         }
       } else {
-        setAuthTab('login');
-        authModal.classList.add('active');
-        authModal.classList.add('open');
+        window.location.replace('/login');
       }
     });
   }
