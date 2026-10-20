@@ -1098,22 +1098,16 @@ export function applyPrintPaperStyle(paperSize: string = '58mm') {
     document.head.appendChild(styleEl);
   }
 
+  styleEl.textContent = `
+    @page {
+      margin: 0;
+    }
+  `;
+
   if (paperSize === '80mm') {
-    styleEl.textContent = `
-      @page {
-        size: 80mm auto !important;
-        margin: 0mm !important;
-      }
-    `;
     document.body.classList.remove('print-58mm');
     document.body.classList.add('print-80mm');
   } else {
-    styleEl.textContent = `
-      @page {
-        size: 58mm auto !important;
-        margin: 0mm !important;
-      }
-    `;
     document.body.classList.remove('print-80mm');
     document.body.classList.add('print-58mm');
   }
