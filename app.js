@@ -351,15 +351,21 @@ function showToast(msg, type = 'info') {
   }, 3200);
 }
 
-// Initialization on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+// Initialization on DOM ready (supports instant execution if already loaded)
+function initApp() {
   loadTemplate('benthenk');
   bindEvents();
   renderHistoryCount();
   if (window.SupabaseAuth) {
     window.SupabaseAuth.checkInitialSession();
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 function loadTemplate(tplKey) {
   const tpl = PRESETS[tplKey] || PRESETS.benthenk;
@@ -1070,37 +1076,58 @@ function bindEvents() {
 
   // Synchronize and prepare the dedicated print container for browser/driver printing
   async function preparePrintReceiptContainer() {
-    let printContainer = document.getElementById('print-receipt-container');
-    if (!printContainer) {
-      printContainer = document.createElement('div');
-      printContainer.id = 'print-receipt-container';
-      document.body.appendChild(printContainer);
-    }
-
-    const receiptPaper = document.getElementById('receipt-paper');
-    if (receiptPaper) {
-      printContainer.className = receiptPaper.className;
-      printContainer.innerHTML = receiptPaper.innerHTML;
-
-      // Force logo visibility and correct display
-      const printLogo = printContainer.querySelector('#t-logo, .t-logo-img');
-      if (printLogo) {
-        printLogo.style.display = (AppState.activeTemplate === 'benthenk' || AppState.currentLogoData) ? 'block' : 'none';
-        printLogo.style.visibility = 'visible';
+    try {
+      let printContainer = document.getElementById('print-receipt-container');
+      if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'print-receipt-container';
+        document.body.appendChild(printContainer);
       }
 
-      // Wait for all images inside printContainer to be fully loaded and decoded
-      const images = Array.from(printContainer.querySelectorAll('img'));
-      await Promise.all(images.map((img) => {
-        if (img.complete && img.naturalWidth > 0) return Promise.resolve(true);
-        return new Promise((resolve) => {
-          img.onload = () => resolve(true);
-          img.onerror = () => resolve(false);
-          if (typeof img.decode === 'function') {
-            img.decode().then(() => resolve(true)).catch(() => resolve(false));
-          }
-        });
-      }));
+      const receiptPaper = document.getElementById('receipt-paper');
+      if (receiptPaper) {
+        printContainer.className = receiptPaper.className;
+        printContainer.innerHTML = receiptPaper.innerHTML;
+
+        // Force logo visibility and correct display
+        const printLogo = printContainer.querySelector('#t-logo, .t-logo-img');
+        if (printLogo) {
+          const isBenthenk = (AppState.currentTemplate === 'benthenk' || AppState.activeTemplate === 'benthenk');
+          const hasLogo = Boolean(AppState.currentLogoData || isBenthenk);
+          printLogo.style.display = hasLogo ? 'block' : 'none';
+          printLogo.style.visibility = hasLogo ? 'visible' : 'hidden';
+        }
+
+        // Wait for all images with strict maximum timeout (never blocks print)
+        const images = Array.from(printContainer.querySelectorAll('img'));
+        if (images.length > 0) {
+          const imagePromises = images.map((img) => {
+            if (img.complete && img.naturalWidth > 0) return Promise.resolve(true);
+            return new Promise((resolve) => {
+              let done = false;
+              const finish = () => {
+                if (!done) {
+                  done = true;
+                  resolve(true);
+                }
+              };
+              img.addEventListener('load', finish, { once: true });
+              img.addEventListener('error', finish, { once: true });
+              if (typeof img.decode === 'function') {
+                img.decode().then(finish).catch(finish);
+              }
+              setTimeout(finish, 80);
+            });
+          });
+
+          await Promise.race([
+            Promise.all(imagePromises),
+            new Promise((resolve) => setTimeout(resolve, 80))
+          ]);
+        }
+      }
+    } catch (err) {
+      console.warn('preparePrintReceiptContainer warning:', err);
     }
   }
 
@@ -1117,12 +1144,22 @@ function bindEvents() {
     } catch (e) {
       console.warn('Save transaction warning:', e);
     }
-    applyPrintPaperStyle(AppState.paperWidth || '58mm');
-    await preparePrintReceiptContainer();
-    // Small delay to allow layout engine to paint images before print snapshot
+
+    try {
+      applyPrintPaperStyle(AppState.paperWidth || '58mm');
+      await preparePrintReceiptContainer();
+    } catch (e) {
+      console.warn('Prepare print error:', e);
+    }
+
+    // Direct, guaranteed call to window.print()
     setTimeout(() => {
-      window.print();
-    }, 60);
+      try {
+        window.print();
+      } catch (err) {
+        console.error('window.print error:', err);
+      }
+    }, 40);
   }
 
   const btnPrintBrowser = document.getElementById('btn-print-browser');
