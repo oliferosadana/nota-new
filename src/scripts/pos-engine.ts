@@ -513,9 +513,6 @@ export function updateReceipt() {
       tQrcodeContainer.style.display = 'none';
     }
   }
-
-  // Continuously sync print container so it is pre-rendered and decoded in advance
-  preparePrintReceiptContainer();
 }
 
 export function renderFormItems() {
@@ -1351,59 +1348,18 @@ export function initPOS() {
   }
 
   // Synchronize and prepare the dedicated print container for browser/driver printing
-  async function preparePrintReceiptContainer(): Promise<void> {
-    try {
-      let printContainer = document.getElementById('print-receipt-container');
-      if (!printContainer) {
-        printContainer = document.createElement('div');
-        printContainer.id = 'print-receipt-container';
-        document.body.appendChild(printContainer);
-      }
+  function preparePrintReceiptContainer(): void {
+    let printContainer = document.getElementById('print-receipt-container');
+    if (!printContainer) {
+      printContainer = document.createElement('div');
+      printContainer.id = 'print-receipt-container';
+      document.body.appendChild(printContainer);
+    }
 
-      const receiptPaper = document.getElementById('receipt-paper');
-      if (receiptPaper) {
-        printContainer.className = receiptPaper.className;
-        printContainer.innerHTML = receiptPaper.innerHTML;
-
-        // Force logo images to be visible and correctly sized in print container
-        const printLogo = printContainer.querySelector('#t-logo, .t-logo-img') as HTMLImageElement | null;
-        if (printLogo) {
-          const isBenthenk = state.activeTemplate === 'benthenk' || (state as any).currentTemplate === 'benthenk';
-          const hasLogo = Boolean(state.uploadedLogo || isBenthenk);
-          printLogo.style.display = hasLogo ? 'block' : 'none';
-          printLogo.style.visibility = hasLogo ? 'visible' : 'hidden';
-        }
-
-        // Wait for all images inside printContainer with strict timeout (max 80ms)
-        const images = Array.from(printContainer.querySelectorAll('img'));
-        if (images.length > 0) {
-          const imagePromises = images.map((img) => {
-            if (img.complete && img.naturalWidth > 0) return Promise.resolve(true);
-            return new Promise((resolve) => {
-              let done = false;
-              const finish = () => {
-                if (!done) {
-                  done = true;
-                  resolve(true);
-                }
-              };
-              img.addEventListener('load', finish, { once: true });
-              img.addEventListener('error', finish, { once: true });
-              if (typeof img.decode === 'function') {
-                img.decode().then(finish).catch(finish);
-              }
-              setTimeout(finish, 80);
-            });
-          });
-
-          await Promise.race([
-            Promise.all(imagePromises),
-            new Promise((resolve) => setTimeout(resolve, 80))
-          ]);
-        }
-      }
-    } catch (err) {
-      console.warn('preparePrintReceiptContainer warning:', err);
+    const receiptPaper = document.getElementById('receipt-paper');
+    if (receiptPaper) {
+      printContainer.className = receiptPaper.className;
+      printContainer.innerHTML = receiptPaper.innerHTML;
     }
   }
 
@@ -1414,35 +1370,21 @@ export function initPOS() {
   });
 
   // PRINT: Standard Browser / System Driver Print
-  async function printReceiptBrowser() {
+  function printReceiptBrowser() {
     try {
       saveTransaction();
     } catch (err) {
       console.warn('Save transaction warning:', err);
     }
 
-    try {
-      applyPrintPaperStyle(state.paperSize || '58mm');
-      await preparePrintReceiptContainer();
-    } catch (err) {
-      console.warn('Prepare print error:', err);
-    }
-
-    // Guaranteed execution of window.print()
-    setTimeout(() => {
-      try {
-        window.print();
-      } catch (err) {
-        console.error('window.print error:', err);
-      }
-    }, 40);
+    applyPrintPaperStyle(state.paperSize || '58mm');
+    preparePrintReceiptContainer();
+    window.print();
   }
 
   const btnPrintBrowser = document.getElementById('btn-print-browser');
   if (btnPrintBrowser) {
-    btnPrintBrowser.addEventListener('click', () => {
-      printReceiptBrowser();
-    });
+    btnPrintBrowser.addEventListener('click', printReceiptBrowser);
   }
 
   const btnPrintBt = document.getElementById('btn-print-bt');
