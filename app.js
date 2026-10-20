@@ -1082,7 +1082,11 @@ function bindEvents() {
 
   // PRINT: Standard Browser / System Driver Print
   function printReceiptBrowser() {
-    saveCurrentTransactionToHistory();
+    try {
+      saveCurrentTransactionToHistory();
+    } catch (e) {
+      console.warn('Save transaction warning:', e);
+    }
     applyPrintPaperStyle(AppState.paperWidth || '58mm');
     preparePrintReceiptContainer();
     window.print();

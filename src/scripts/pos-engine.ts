@@ -1370,12 +1370,17 @@ export function initPOS() {
 
   // PRINT: Standard Browser / System Driver Print
   function printReceiptBrowser() {
-    saveTransaction();
+    try {
+      saveTransaction();
+    } catch (err) {
+      console.warn('Save transaction warning:', err);
+    }
     applyPrintPaperStyle(state.paperSize || '58mm');
     preparePrintReceiptContainer();
     window.print();
   }
 
+  const btnPrintBrowser = document.getElementById('btn-print-browser');
   if (btnPrintBrowser) {
     btnPrintBrowser.addEventListener('click', printReceiptBrowser);
   }
