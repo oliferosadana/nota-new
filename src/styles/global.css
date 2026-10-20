@@ -623,6 +623,15 @@ input::placeholder, textarea::placeholder {
   margin-bottom: 1px;
 }
 
+.t-meta-grid.hidden,
+.t-meta-grid[style*="display: none"],
+.t-meta-grid[style*="display:none"],
+#t-customer-row.hidden,
+#t-customer-row[style*="display: none"],
+#t-customer-row[style*="display:none"] {
+  display: none !important;
+}
+
 .t-meta-grid > span:first-child {
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -1296,6 +1305,15 @@ input::placeholder, textarea::placeholder {
     white-space: nowrap !important;
     width: 100% !important;
     box-sizing: border-box !important;
+  }
+
+  .t-meta-grid.hidden,
+  .t-meta-grid[style*="display: none"],
+  .t-meta-grid[style*="display:none"],
+  #t-customer-row.hidden,
+  #t-customer-row[style*="display: none"],
+  #t-customer-row[style*="display:none"] {
+    display: none !important;
   }
 
   .t-meta-grid > span:first-child,

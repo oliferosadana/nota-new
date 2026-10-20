@@ -432,11 +432,15 @@ export function updateReceipt() {
   if (tTxSalesRow) tTxSalesRow.style.display = txSalesInput.value.trim() ? 'inline' : 'none';
 
   if (tCustomerRow && tTxCustomer) {
-    if (txCustomerInput.value.trim()) {
-      tTxCustomer.textContent = txCustomerInput.value.trim();
-      tCustomerRow.style.display = 'grid';
+    const custVal = txCustomerInput.value.trim();
+    if (custVal) {
+      tTxCustomer.textContent = custVal;
+      tCustomerRow.classList.remove('hidden');
+      tCustomerRow.style.setProperty('display', 'flex', 'important');
     } else {
-      tCustomerRow.style.display = 'none';
+      tCustomerRow.classList.add('hidden');
+      tCustomerRow.style.setProperty('display', 'none', 'important');
+      tTxCustomer.textContent = '';
     }
   }
 

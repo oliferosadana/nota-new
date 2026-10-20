@@ -622,11 +622,17 @@ function updateCalculation() {
   }
 
   const custRow = document.getElementById('t-customer-row');
-  if (txCustomer.trim()) {
-    custRow.style.display = 'flex';
-    document.getElementById('t-tx-customer').textContent = txCustomer;
-  } else {
-    custRow.style.display = 'none';
+  if (custRow) {
+    if (txCustomer.trim()) {
+      custRow.classList.remove('hidden');
+      custRow.style.setProperty('display', 'flex', 'important');
+      document.getElementById('t-tx-customer').textContent = txCustomer;
+    } else {
+      custRow.classList.add('hidden');
+      custRow.style.setProperty('display', 'none', 'important');
+      const elCust = document.getElementById('t-tx-customer');
+      if (elCust) elCust.textContent = '';
+    }
   }
 
   // Render items in preview (format: "1 pcs x 150.000" and total right-aligned "150.000")
