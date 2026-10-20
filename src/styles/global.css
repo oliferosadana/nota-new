@@ -1065,6 +1065,11 @@ input::placeholder, textarea::placeholder {
   to { transform: translateX(0); opacity: 1; }
 }
 
+/* Screen mode: hide dedicated print container */
+#print-receipt-container {
+  display: none !important;
+}
+
 /* =========================================================
    PRINT-ONLY STYLESHEET FOR THERMAL PRINTER (58mm / 80mm)
    ========================================================= */
@@ -1091,26 +1096,13 @@ input::placeholder, textarea::placeholder {
     print-color-adjust: exact !important;
   }
 
-  /* Reset main layout container from grid to simple block without padding */
-  .app-container,
-  main.app-container {
-    display: block !important;
-    position: static !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    min-height: 0 !important;
-    height: auto !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    overflow: visible !important;
-  }
-
-  /* Hide interactive UI elements on print */
+  /* Hide interactive screen UI and layout containers completely on print */
   .app-header,
+  .app-container,
+  main.app-container,
   .form-column,
+  .preview-column,
+  .preview-scroll-area,
   .preview-toolbar,
   .preview-actions,
   .thermal-paper-bottom,
@@ -1124,88 +1116,42 @@ input::placeholder, textarea::placeholder {
   #catalog-modal,
   #history-modal {
     display: none !important;
-  }
-
-  .preview-column {
-    display: block !important;
-    position: static !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 0 !important;
-    height: auto !important;
-    padding: 0 !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
     margin: 0 !important;
-    visibility: visible !important;
-    overflow: visible !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  .preview-scroll-area {
-    display: block !important;
-    position: static !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 0 !important;
-    height: auto !important;
     padding: 0 !important;
-    margin: 0 !important;
-    visibility: visible !important;
-    overflow: visible !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
   }
 
-  .thermal-paper-wrap {
+  /* Show dedicated print container at the top of the print stream */
+  #print-receipt-container {
     display: block !important;
+    visibility: visible !important;
     position: static !important;
     margin: 0 auto !important;
-    padding: 0 !important;
-    width: 48mm !important;
-    max-width: 48mm !important;
-    visibility: visible !important;
-    filter: none !important;
-    box-shadow: none !important;
     background: #ffffff !important;
-    border: none !important;
-  }
-
-  .thermal-paper {
-    display: block !important;
-    visibility: visible !important;
-    position: static !important;
-    margin: 0 auto !important;
-    width: 48mm !important;
-    max-width: 48mm !important;
-    padding: 1mm 1.5mm 2.5mm 1.5mm !important;
-    font-size: 8pt !important;
-    line-height: 1.22 !important;
-    font-family: 'Roboto Condensed', Arial, sans-serif !important;
-    font-weight: 700 !important;
     color: #000000 !important;
-    background: #ffffff !important;
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
   }
 
-  /* Ensure all contents inside the receipt paper are visible */
-  .thermal-paper * {
+  #print-receipt-container * {
     visibility: visible !important;
   }
 
   /* 80mm Physical Thermal Paper Layout (Safe Print Head = 72mm) */
-  body.print-80mm .thermal-paper-wrap {
+  body.print-80mm .thermal-paper-wrap,
+  body.print-80mm #print-receipt-container,
+  body.print-80mm #print-receipt-container.thermal-paper {
     width: 72mm !important;
     max-width: 72mm !important;
     min-width: 72mm !important;
   }
 
-  body.print-80mm .thermal-paper {
+  body.print-80mm .thermal-paper,
+  body.print-80mm #print-receipt-container {
     width: 72mm !important;
     max-width: 72mm !important;
     min-width: 72mm !important;
@@ -1266,13 +1212,16 @@ input::placeholder, textarea::placeholder {
   }
 
   /* 58mm Physical Thermal Paper Layout (Safe Print Head = 48mm) */
-  body.print-58mm .thermal-paper-wrap {
+  body.print-58mm .thermal-paper-wrap,
+  body.print-58mm #print-receipt-container,
+  body.print-58mm #print-receipt-container.thermal-paper {
     width: 48mm !important;
     max-width: 48mm !important;
     min-width: 48mm !important;
   }
 
-  body.print-58mm .thermal-paper {
+  body.print-58mm .thermal-paper,
+  body.print-58mm #print-receipt-container {
     width: 48mm !important;
     max-width: 48mm !important;
     min-width: 48mm !important;

@@ -1058,12 +1058,40 @@ function bindEvents() {
     }
   });
 
+  // Synchronize and prepare the dedicated print container for browser/driver printing
+  function preparePrintReceiptContainer() {
+    let printContainer = document.getElementById('print-receipt-container');
+    if (!printContainer) {
+      printContainer = document.createElement('div');
+      printContainer.id = 'print-receipt-container';
+      document.body.appendChild(printContainer);
+    }
+
+    const receiptPaper = document.getElementById('receipt-paper');
+    if (receiptPaper) {
+      printContainer.className = receiptPaper.className;
+      printContainer.innerHTML = receiptPaper.innerHTML;
+    }
+  }
+
+  // Hook standard browser beforeprint event (supports Ctrl+P, browser menu, and window.print)
+  window.addEventListener('beforeprint', () => {
+    applyPrintPaperStyle(AppState.paperWidth || '58mm');
+    preparePrintReceiptContainer();
+  });
+
   // PRINT: Standard Browser / System Driver Print
-  document.getElementById('btn-print-browser').addEventListener('click', () => {
+  function printReceiptBrowser() {
     saveCurrentTransactionToHistory();
     applyPrintPaperStyle(AppState.paperWidth || '58mm');
+    preparePrintReceiptContainer();
     window.print();
-  });
+  }
+
+  const btnPrintBrowser = document.getElementById('btn-print-browser');
+  if (btnPrintBrowser) {
+    btnPrintBrowser.addEventListener('click', printReceiptBrowser);
+  }
 
   // PRINT: Direct Web Bluetooth (ESC/POS)
   document.getElementById('btn-print-bt').addEventListener('click', async () => {
