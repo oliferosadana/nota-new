@@ -298,22 +298,7 @@ export const prerender = false;
   </style>
 
   <script>
-    import { supabase } from '../lib/supabase';
     import { authService } from '../lib/auth-service';
-
-    // Auto redirect to dashboard if session already exists
-    async function checkExistingSession() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session && session.user) {
-          window.location.href = '/';
-        }
-      } catch (e) {
-        console.warn('Session check warning:', e);
-      }
-    }
-
-    checkExistingSession();
 
     const formLogin = document.getElementById('login-form') as HTMLFormElement;
     const authAlert = document.getElementById('auth-alert');

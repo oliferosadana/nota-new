@@ -578,27 +578,13 @@ export const prerender = false;
   <AuthModal />
 
   <script>
-    import { supabase } from '../lib/supabase';
     import { initPOS } from '../scripts/pos-engine';
     
-    async function verifyAuthAndInit() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session || !session.user) {
-          window.location.href = '/login';
-          return;
-        }
-        initPOS();
-      } catch (err) {
-        console.warn('Auth check error:', err);
-        window.location.href = '/login';
-      }
-    }
-
+    // Initialize POS dashboard directly (no forced redirect loop)
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', verifyAuthAndInit);
+      document.addEventListener('DOMContentLoaded', () => initPOS());
     } else {
-      verifyAuthAndInit();
+      initPOS();
     }
   </script>
 </Layout>

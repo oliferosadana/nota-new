@@ -1536,19 +1536,32 @@ export function initPOS() {
   if (btnAuthAction && authModal) {
     btnAuthAction.addEventListener('click', async () => {
       if (authService.getCurrentUser()) {
-        if (confirm('Apakah Anda ingin keluar dari akun?')) {
+        const userEmail = authService.getCurrentUser()?.email || 'akun ini';
+        if (confirm(`Apakah Anda ingin keluar dari ${userEmail}?`)) {
           await authService.logout();
-          window.location.href = '/login';
+          showToast('Anda telah keluar dari akun.', 'info');
         }
       } else {
-        window.location.href = '/login';
+        setAuthTab('login');
+        authModal.classList.add('active');
+        authModal.classList.add('open');
       }
     });
   }
 
   if (btnCloseAuth && authModal) {
-    btnCloseAuth.addEventListener('click', () => authModal.classList.remove('open'));
+    btnCloseAuth.addEventListener('click', () => {
+      authModal.classList.remove('active');
+      authModal.classList.remove('open');
+    });
   }
+
+  authModal?.addEventListener('click', (e) => {
+    if (e.target === authModal) {
+      authModal.classList.remove('active');
+      authModal.classList.remove('open');
+    }
+  });
 
   if (formLogin) {
     formLogin.addEventListener('submit', async (e) => {
