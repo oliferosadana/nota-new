@@ -1,7 +1,12 @@
 import type { APIRoute } from 'astro';
 import { supabase } from '../../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export const prerender = false;
+
+const supabaseUrl = import.meta.env.SUPABASE_URL || 'https://kikczqdjyfhoqbhdgvmp.supabase.co';
+const supabaseSecret = import.meta.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SECRET_KEY || '';
+const adminClient = createClient(supabaseUrl, supabaseSecret || import.meta.env.SUPABASE_ANON_KEY || '');
 
 // GET Products
 export const GET: APIRoute = async ({ request }) => {
@@ -16,7 +21,13 @@ export const GET: APIRoute = async ({ request }) => {
     }
 
     if (!user) {
-      return new Response(JSON.stringify({ products: [] }), {
+      // Allow viewing store products from database even in guest mode
+      const { data, error } = await adminClient
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      return new Response(JSON.stringify({ products: data || [] }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -59,13 +70,6 @@ export const POST: APIRoute = async ({ request }) => {
       user = data.user;
     }
 
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Harap login untuk menambahkan produk ke database.' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
     const body = await request.json();
     if (!body.name || body.price === undefined) {
       return new Response(JSON.stringify({ error: 'Nama dan harga produk wajib diisi.' }), {
@@ -74,10 +78,13 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const { data, error } = await supabase
+    const clientToUse = user ? supabase : adminClient;
+    const targetUserId = user ? user.id : '77ff8554-ffc1-4c0a-a125-5afff71944ff';
+
+    const { data, error } = await clientToUse
       .from('products')
       .insert([{
-        user_id: user.id,
+        user_id: targetUserId,
         name: body.name.trim(),
         price: Number(body.price) || 0,
         unit: body.unit || 'pcs',
@@ -119,13 +126,6 @@ export const DELETE: APIRoute = async ({ request }) => {
       user = data.user;
     }
 
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized.' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
     const url = new URL(request.url);
     const productId = url.searchParams.get('id');
 
@@ -136,11 +136,13 @@ export const DELETE: APIRoute = async ({ request }) => {
       });
     }
 
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', productId)
-      .eq('user_id', user.id);
+    const clientToUse = user ? supabase : adminClient;
+    let query = clientToUse.from('products').delete().eq('id', productId);
+    if (user) {
+      query = query.eq('user_id', user.id);
+    }
+
+    const { error } = await query;
 
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {

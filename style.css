@@ -857,7 +857,8 @@ input::placeholder, textarea::placeholder {
   transition: all 0.25s ease;
 }
 
-.modal-backdrop.active {
+.modal-backdrop.active,
+.modal-backdrop.open {
   opacity: 1;
   pointer-events: auto;
 }

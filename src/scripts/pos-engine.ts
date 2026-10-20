@@ -767,10 +767,16 @@ export async function renderCatalogModal() {
     card.className = 'catalog-card';
     card.style.cssText = 'background: rgba(255,255,255,0.04); border: 1px solid var(--bg-card-border); border-radius: var(--radius-sm); padding: 10px; cursor: pointer; transition: all 0.2s; position: relative;';
 
+    const isDbItem = Boolean(catItem.id);
     card.innerHTML = `
-      <div style="font-weight: 600; font-size: 0.82rem; color: #fff; margin-bottom: 4px;">${catItem.name}</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.66rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; ${isDbItem ? 'background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);' : 'background: rgba(255, 255, 255, 0.08); color: #94a3b8;'}">
+          ${isDbItem ? '☁️ Database' : 'Preset'}
+        </span>
+        ${isDbItem ? `<button type="button" class="btn-del-prod" data-id="${catItem.id}" title="Hapus dari database" style="background: none; border: none; color: #f87171; font-size: 13px; line-height: 1; cursor: pointer; padding: 0 4px;">✕</button>` : ''}
+      </div>
+      <div style="font-weight: 600; font-size: 0.82rem; color: #fff; margin-bottom: 4px; word-break: break-word;">${catItem.name}</div>
       <div style="font-size: 0.78rem; font-weight: 700; color: #34d399;">Rp ${formatRp(catItem.price)} <span style="font-size: 0.68rem; color: var(--text-dim); font-weight: 400;">/ ${catItem.unit || 'pcs'}</span></div>
-      ${catItem.id ? `<button type="button" class="btn-del-prod" data-id="${catItem.id}" title="Hapus dari database" style="position: absolute; top: 6px; right: 6px; background: none; border: none; color: #f87171; font-size: 11px; cursor: pointer;">✕</button>` : ''}
     `;
 
     card.addEventListener('click', (e: any) => {
@@ -1413,9 +1419,18 @@ export function initPOS() {
   const formAddProduct = document.getElementById('form-add-product') as HTMLFormElement;
 
   if (btnOpenCatalog && catalogModal) {
-    btnOpenCatalog.addEventListener('click', () => {
-      renderCatalogModal();
+    btnOpenCatalog.addEventListener('click', async () => {
       catalogModal.classList.add('open');
+      renderCatalogModal();
+      try {
+        const products = await authService.getProducts();
+        if (products && products.length > 0) {
+          state.dbProducts = products;
+          renderCatalogModal();
+        }
+      } catch (e) {
+        console.warn('Re-fetch products note:', e);
+      }
     });
   }
   if (btnCloseCatalog && catalogModal) {

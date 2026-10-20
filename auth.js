@@ -254,6 +254,99 @@ class SupabaseAuthService {
       return { synced: false, reason: e.message };
     }
   }
+
+  // Database: Products / Catalog
+  async getProducts() {
+    try {
+      const token = this.currentUser ? (await this.client?.auth.getSession())?.data?.session?.access_token : null;
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch('/api/products', { headers });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.products) && data.products.length > 0) {
+          return data.products;
+        }
+      }
+    } catch (e) {
+      // Fallback to client
+    }
+
+    if (this.client) {
+      try {
+        const { data, error } = await this.client
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: true });
+        if (!error && data) return data;
+      } catch (err) {
+        console.warn('Supabase products fetch:', err);
+      }
+    }
+    return [];
+  }
+
+  async addProduct(productData) {
+    try {
+      const token = this.currentUser ? (await this.client?.auth.getSession())?.data?.session?.access_token : null;
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(productData)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.product;
+      }
+    } catch (e) {
+      // Fallback
+    }
+
+    if (!this.client) throw new Error('Koneksi Supabase belum aktif.');
+    const userId = this.currentUser ? this.currentUser.id : '77ff8554-ffc1-4c0a-a125-5afff71944ff';
+    const { data, error } = await this.client
+      .from('products')
+      .insert([{
+        user_id: userId,
+        name: productData.name.trim(),
+        price: Number(productData.price) || 0,
+        unit: productData.unit || 'pcs',
+        category: productData.category || 'Umum',
+        stock: 100,
+        sku: ''
+      }])
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async deleteProduct(productId) {
+    try {
+      const token = this.currentUser ? (await this.client?.auth.getSession())?.data?.session?.access_token : null;
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch(`/api/products?id=${productId}`, {
+        method: 'DELETE',
+        headers
+      });
+      if (res.ok) return true;
+    } catch (e) {
+      // Fallback
+    }
+
+    if (!this.client) throw new Error('Koneksi Supabase belum aktif.');
+    const { error } = await this.client
+      .from('products')
+      .delete()
+      .eq('id', productId);
+
+    if (error) throw new Error(error.message);
+    return true;
+  }
 }
 
 window.SupabaseAuth = new SupabaseAuthService();

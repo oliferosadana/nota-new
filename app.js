@@ -302,7 +302,8 @@ const AppState = {
   paperWidth: '58mm',
   currentLogoData: BENTHENK_LOGO_SVG,
   items: [],
-  currentCatalog: []
+  currentCatalog: [],
+  dbProducts: []
 };
 
 // Utility formatters (matching dot separator: 150.000)
@@ -989,14 +990,60 @@ function bindEvents() {
     showToast("Transaksi baru siap!", "success");
   });
 
-  // Open / Close Catalog Modal
+  // Open / Close Catalog Modal & Add Product Form
   const catModal = document.getElementById('catalog-modal');
-  document.getElementById('btn-open-catalog').addEventListener('click', () => {
-    catModal.classList.add('active');
-  });
-  document.getElementById('btn-close-catalog').addEventListener('click', () => {
-    catModal.classList.remove('active');
-  });
+  const btnOpenCatalog = document.getElementById('btn-open-catalog');
+  const btnCloseCatalog = document.getElementById('btn-close-catalog');
+  const formAddProduct = document.getElementById('form-add-product');
+
+  if (btnOpenCatalog && catModal) {
+    btnOpenCatalog.addEventListener('click', async () => {
+      catModal.classList.add('active');
+      renderCatalogModal();
+      if (window.SupabaseAuth) {
+        try {
+          const prods = await window.SupabaseAuth.getProducts();
+          if (prods && prods.length > 0) {
+            AppState.dbProducts = prods;
+            renderCatalogModal();
+          }
+        } catch (e) {
+          console.warn('Load DB products error:', e);
+        }
+      }
+    });
+  }
+
+  if (btnCloseCatalog && catModal) {
+    btnCloseCatalog.addEventListener('click', () => {
+      catModal.classList.remove('active');
+    });
+  }
+
+  if (formAddProduct) {
+    formAddProduct.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-prod-name')?.value;
+      const price = Number(document.getElementById('new-prod-price')?.value) || 0;
+      const unit = document.getElementById('new-prod-unit')?.value || 'pcs';
+
+      try {
+        const newProduct = await window.SupabaseAuth.addProduct({ name, price, unit });
+        if (newProduct) {
+          AppState.dbProducts.unshift(newProduct);
+        } else {
+          AppState.dbProducts.unshift({ name, price, unit });
+        }
+        formAddProduct.reset();
+        const unitEl = document.getElementById('new-prod-unit');
+        if (unitEl) unitEl.value = 'pcs';
+        renderCatalogModal();
+        showToast(`Produk "${name}" tersimpan ke database!`, 'success');
+      } catch (err) {
+        showToast('Gagal menambah produk: ' + err.message, 'error');
+      }
+    });
+  }
 
   // Open / Close History Modal
   const histModal = document.getElementById('history-modal');
@@ -1379,16 +1426,40 @@ function buildEscPosPayload() {
 // Render Catalog Grid in Modal
 function renderCatalogModal() {
   const grid = document.getElementById('catalog-grid-items');
+  if (!grid) return;
   grid.innerHTML = '';
-  AppState.currentCatalog.forEach(catItem => {
+
+  const presetCatalog = AppState.currentCatalog || [];
+  let allCatalog = [];
+  if (AppState.dbProducts && AppState.dbProducts.length > 0) {
+    allCatalog = [
+      ...AppState.dbProducts,
+      ...presetCatalog.filter(c => !AppState.dbProducts.some(p => p.name.toLowerCase() === c.name.toLowerCase()))
+    ];
+  } else {
+    allCatalog = presetCatalog;
+  }
+
+  allCatalog.forEach(catItem => {
     const card = document.createElement('div');
     card.className = 'catalog-card';
+    card.style.cssText = 'background: rgba(255,255,255,0.04); border: 1px solid var(--bg-card-border); border-radius: var(--radius-sm); padding: 10px; cursor: pointer; transition: all 0.2s; position: relative;';
+
+    const isDbItem = Boolean(catItem.id);
     card.innerHTML = `
-      <div class="catalog-card-name">${catItem.name}</div>
-      <div class="catalog-card-price">${formatNumber(catItem.price)}</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.66rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; ${isDbItem ? 'background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);' : 'background: rgba(255, 255, 255, 0.08); color: #94a3b8;'}">
+          ${isDbItem ? '☁️ Database' : 'Preset'}
+        </span>
+        ${isDbItem ? `<button type="button" class="btn-del-prod" data-id="${catItem.id}" title="Hapus dari database" style="background: none; border: none; color: #f87171; font-size: 13px; line-height: 1; cursor: pointer; padding: 0 4px;">✕</button>` : ''}
+      </div>
+      <div style="font-weight: 600; font-size: 0.82rem; color: #fff; margin-bottom: 4px; word-break: break-word;">${catItem.name}</div>
+      <div style="font-size: 0.78rem; font-weight: 700; color: #34d399;">Rp ${formatNumber(catItem.price)} <span style="font-size: 0.68rem; color: var(--text-dim); font-weight: 400;">/ ${catItem.unit || 'pcs'}</span></div>
     `;
-    card.addEventListener('click', () => {
-      const existing = AppState.items.find(i => i.name === catItem.name);
+
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-del-prod')) return;
+      const existing = AppState.items.find(i => i.name.toLowerCase() === catItem.name.toLowerCase());
       if (existing) {
         existing.qty += 1;
       } else {
@@ -1398,6 +1469,24 @@ function renderCatalogModal() {
       updateCalculation();
       showToast(`+1 ${catItem.name}`, 'success');
     });
+
+    const delBtn = card.querySelector('.btn-del-prod');
+    if (delBtn) {
+      delBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (confirm(`Hapus "${catItem.name}" dari database Supabase?`)) {
+          try {
+            await window.SupabaseAuth.deleteProduct(catItem.id);
+            AppState.dbProducts = AppState.dbProducts.filter(p => p.id !== catItem.id);
+            renderCatalogModal();
+            showToast('Produk dihapus dari database.', 'info');
+          } catch (err) {
+            showToast('Gagal menghapus: ' + err.message, 'error');
+          }
+        }
+      });
+    }
+
     grid.appendChild(card);
   });
 }

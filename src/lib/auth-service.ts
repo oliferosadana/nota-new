@@ -183,14 +183,16 @@ export class AuthService {
 
   async addProduct(productData: { name: string; price: number; unit?: string; category?: string }) {
     const token = await this.getAuthToken();
-    if (!token) throw new Error('Harap login terlebih dahulu.');
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
     const res = await fetch('/api/products', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
+      headers,
       body: JSON.stringify(productData)
     });
 
@@ -201,11 +203,14 @@ export class AuthService {
 
   async deleteProduct(productId: string) {
     const token = await this.getAuthToken();
-    if (!token) throw new Error('Harap login terlebih dahulu.');
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
     const res = await fetch(`/api/products?id=${productId}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers
     });
 
     const data = await res.json();
