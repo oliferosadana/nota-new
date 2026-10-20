@@ -1,6 +1,7 @@
 import { BarcodeEngine, QRCodeEngine } from '../lib/barcode-qr.js';
 import { EscPosBuilder, ThermalPrinterDevice } from '../lib/escpos.js';
 import { authService } from '../lib/auth-service';
+import { BENTHENK_LOGO_DATA_URL } from '../lib/benthenk-logo';
 
 // Castle / Benteng SVG Logo for Benthenk Komputer (Halftone / Dithered Texture)
 export const BENTHENK_LOGO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="85" height="85">
@@ -97,7 +98,7 @@ export const PRESETS: Record<string, any> = {
     wifi: "",
     qr: "",
     showLogo: true,
-    logoUrl: "/img/ben.jpeg",
+    logoUrl: BENTHENK_LOGO_DATA_URL,
     showBarcode: false,
     showQrcode: false,
     items: [
@@ -399,7 +400,7 @@ export function updateReceipt() {
       tLogo.src = state.uploadedLogo;
       tLogo.style.display = 'block';
     } else if (state.activeTemplate === 'benthenk') {
-      const presetLogo = PRESETS.benthenk.logoUrl;
+      const presetLogo = PRESETS.benthenk.logoUrl || BENTHENK_LOGO_DATA_URL;
       tLogo.src = presetLogo || BENTHENK_LOGO_SVG;
       tLogo.style.display = 'block';
     } else {
@@ -512,6 +513,9 @@ export function updateReceipt() {
       tQrcodeContainer.style.display = 'none';
     }
   }
+
+  // Continuously sync print container so it is pre-rendered and decoded in advance
+  preparePrintReceiptContainer();
 }
 
 export function renderFormItems() {
@@ -1347,7 +1351,7 @@ export function initPOS() {
   }
 
   // Synchronize and prepare the dedicated print container for browser/driver printing
-  function preparePrintReceiptContainer() {
+  async function preparePrintReceiptContainer(): Promise<void> {
     let printContainer = document.getElementById('print-receipt-container');
     if (!printContainer) {
       printContainer = document.createElement('div');
@@ -1359,6 +1363,26 @@ export function initPOS() {
     if (receiptPaper) {
       printContainer.className = receiptPaper.className;
       printContainer.innerHTML = receiptPaper.innerHTML;
+
+      // Force logo images to be visible and correctly sized in print container
+      const printLogo = printContainer.querySelector('#t-logo, .t-logo-img') as HTMLImageElement | null;
+      if (printLogo) {
+        printLogo.style.display = (state.activeTemplate === 'benthenk' || state.uploadedLogo) ? 'block' : 'none';
+        printLogo.style.visibility = 'visible';
+      }
+
+      // Wait for all images inside printContainer to be fully loaded and decoded
+      const images = Array.from(printContainer.querySelectorAll('img'));
+      await Promise.all(images.map((img) => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve(true);
+        return new Promise((resolve) => {
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+          if (typeof img.decode === 'function') {
+            img.decode().then(() => resolve(true)).catch(() => resolve(false));
+          }
+        });
+      }));
     }
   }
 
@@ -1369,20 +1393,25 @@ export function initPOS() {
   });
 
   // PRINT: Standard Browser / System Driver Print
-  function printReceiptBrowser() {
+  async function printReceiptBrowser() {
     try {
       saveTransaction();
     } catch (err) {
       console.warn('Save transaction warning:', err);
     }
     applyPrintPaperStyle(state.paperSize || '58mm');
-    preparePrintReceiptContainer();
-    window.print();
+    await preparePrintReceiptContainer();
+    // Brief rendering delay to let browser layout engine paint images before snapshotting
+    setTimeout(() => {
+      window.print();
+    }, 60);
   }
 
   const btnPrintBrowser = document.getElementById('btn-print-browser');
   if (btnPrintBrowser) {
-    btnPrintBrowser.addEventListener('click', printReceiptBrowser);
+    btnPrintBrowser.addEventListener('click', () => {
+      printReceiptBrowser();
+    });
   }
 
   const btnPrintBt = document.getElementById('btn-print-bt');

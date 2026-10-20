@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import CatalogModal from '../components/CatalogModal.astro';
 import HistoryModal from '../components/HistoryModal.astro';
 import AuthModal from '../components/AuthModal.astro';
+import { BENTHENK_LOGO_DATA_URL } from '../lib/benthenk-logo';
 
 export const prerender = false;
 ---
@@ -356,7 +357,7 @@ export const prerender = false;
             <div id="receipt-retail-view">
               <!-- Store Header -->
               <div class="t-header">
-                <img id="t-logo" class="t-logo-img" src="/img/ben.jpeg" alt="Logo Benthenk" />
+                <img id="t-logo" class="t-logo-img" src={BENTHENK_LOGO_DATA_URL} alt="Logo Benthenk" />
                 <div class="t-title" id="t-store-name">UD BENTHENK KOMPUTER</div>
                 <div class="t-subtitle" id="t-store-tagline" style="display: none;"></div>
                 <div class="t-address" id="t-store-address">Komp Balikpapan Baru Blok C No.6</div>

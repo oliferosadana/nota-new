@@ -108,7 +108,7 @@ const PRESETS = {
     wifi: "",
     qr: "",
     showLogo: true,
-    logoUrl: "./img/ben.jpeg",
+    logoUrl: (typeof BENTHENK_LOGO_DATA_URL !== 'undefined') ? BENTHENK_LOGO_DATA_URL : "./img/ben.jpeg",
     showBarcode: false,
     showQrcode: false,
     items: [
@@ -707,6 +707,11 @@ function updateCalculation() {
     qrContainer.style.display = 'none';
     qrContainer.innerHTML = '';
   }
+
+  // Pre-render print container continuously
+  if (typeof preparePrintReceiptContainer === 'function') {
+    preparePrintReceiptContainer();
+  }
 }
 
 // SPBU Live Preview Engine & Calculation
@@ -784,6 +789,11 @@ function updateSpbuReceipt() {
   if (calcNon) calcNon.textContent = `Rp ${formatSpbu(totalNon)}`;
   if (calcSub) calcSub.textContent = `Rp ${formatSpbu(totalSub)}`;
   if (calcDibayar) calcDibayar.textContent = `Rp ${formatSpbu(totalDibayar)}`;
+
+  // Pre-render print container continuously
+  if (typeof preparePrintReceiptContainer === 'function') {
+    preparePrintReceiptContainer();
+  }
 }
 
 // Bind all DOM events
@@ -1059,7 +1069,7 @@ function bindEvents() {
   });
 
   // Synchronize and prepare the dedicated print container for browser/driver printing
-  function preparePrintReceiptContainer() {
+  async function preparePrintReceiptContainer() {
     let printContainer = document.getElementById('print-receipt-container');
     if (!printContainer) {
       printContainer = document.createElement('div');
@@ -1071,6 +1081,26 @@ function bindEvents() {
     if (receiptPaper) {
       printContainer.className = receiptPaper.className;
       printContainer.innerHTML = receiptPaper.innerHTML;
+
+      // Force logo visibility and correct display
+      const printLogo = printContainer.querySelector('#t-logo, .t-logo-img');
+      if (printLogo) {
+        printLogo.style.display = (AppState.activeTemplate === 'benthenk' || AppState.currentLogoData) ? 'block' : 'none';
+        printLogo.style.visibility = 'visible';
+      }
+
+      // Wait for all images inside printContainer to be fully loaded and decoded
+      const images = Array.from(printContainer.querySelectorAll('img'));
+      await Promise.all(images.map((img) => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve(true);
+        return new Promise((resolve) => {
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+          if (typeof img.decode === 'function') {
+            img.decode().then(() => resolve(true)).catch(() => resolve(false));
+          }
+        });
+      }));
     }
   }
 
@@ -1081,20 +1111,25 @@ function bindEvents() {
   });
 
   // PRINT: Standard Browser / System Driver Print
-  function printReceiptBrowser() {
+  async function printReceiptBrowser() {
     try {
       saveCurrentTransactionToHistory();
     } catch (e) {
       console.warn('Save transaction warning:', e);
     }
     applyPrintPaperStyle(AppState.paperWidth || '58mm');
-    preparePrintReceiptContainer();
-    window.print();
+    await preparePrintReceiptContainer();
+    // Small delay to allow layout engine to paint images before print snapshot
+    setTimeout(() => {
+      window.print();
+    }, 60);
   }
 
   const btnPrintBrowser = document.getElementById('btn-print-browser');
   if (btnPrintBrowser) {
-    btnPrintBrowser.addEventListener('click', printReceiptBrowser);
+    btnPrintBrowser.addEventListener('click', () => {
+      printReceiptBrowser();
+    });
   }
 
   // PRINT: Direct Web Bluetooth (ESC/POS)
